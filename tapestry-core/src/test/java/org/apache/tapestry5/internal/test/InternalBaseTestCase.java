@@ -24,10 +24,19 @@ import org.apache.tapestry5.internal.services.*;
 import org.apache.tapestry5.internal.structure.ComponentPageElement;
 import org.apache.tapestry5.internal.structure.ComponentPageElementResources;
 import org.apache.tapestry5.internal.structure.Page;
+<<<<<<< HEAD
 import org.apache.tapestry5.ioc.AnnotationProvider;
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.Resource;
+=======
+import org.apache.tapestry5.internal.structure.PageResources;
+import org.apache.tapestry5.ioc.*;
+import org.apache.tapestry5.ioc.def.ContributionDef;
+import org.apache.tapestry5.ioc.def.ModuleDef;
+import org.apache.tapestry5.ioc.internal.InternalRegistry;
+import org.apache.tapestry5.ioc.internal.util.MessagesImpl;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.ioc.services.ClassPropertyAdapter;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
 import org.apache.tapestry5.ioc.services.PropertyAdapter;
@@ -190,7 +199,71 @@ public class InternalBaseTestCase extends TapestryTestCase implements Registry
         expect(element.getComponentResources()).andReturn(resources).atLeastOnce();
     }
 
+<<<<<<< HEAD
     protected final RenderCommand mockRenderCommand()
+=======
+    protected final void train_getComponentClassName(EmbeddedComponentModel model, String className)
+    {
+        expect(model.getComponentClassName()).andReturn(className).atLeastOnce();
+    }
+
+    protected final RenderCommand mockRenderCommand()
+    {
+        return newMock(RenderCommand.class);
+    }
+
+    protected final void train_getParameterNames(EmbeddedComponentModel model, String... names)
+    {
+        expect(model.getParameterNames()).andReturn(Arrays.asList(names));
+    }
+
+    protected final void train_newComponentElement(PageElementFactory elementFactory, ComponentPageElement container,
+                                                   String embeddedId, String embeddedType, String componentClassName,
+                                                   String elementName, Location location, ComponentPageElement embedded)
+    {
+        expect(elementFactory.newComponentElement(isA(Page.class), eq(container), eq(embeddedId), eq(embeddedType),
+                                                  eq(componentClassName), eq(elementName), eq(location))).andReturn(
+                embedded);
+    }
+
+    protected final void train_getComponentType(EmbeddedComponentModel emodel, String componentType)
+    {
+        expect(emodel.getComponentType()).andReturn(componentType).atLeastOnce();
+    }
+
+    protected final void train_getEmbeddedComponentModel(ComponentModel model, String embeddedId,
+                                                         EmbeddedComponentModel emodel)
+    {
+        expect(model.getEmbeddedComponentModel(embeddedId)).andReturn(emodel).atLeastOnce();
+    }
+
+    protected final EmbeddedComponentModel mockEmbeddedComponentModel()
+    {
+        return newMock(EmbeddedComponentModel.class);
+    }
+
+    protected final PageElementFactory mockPageElementFactory()
+    {
+        return newMock(PageElementFactory.class);
+    }
+
+    protected final ComponentTemplateSource mockComponentTemplateSource()
+    {
+        return newMock(ComponentTemplateSource.class);
+    }
+
+    protected final void train_getLogger(ComponentModel model, Logger logger)
+    {
+        expect(model.getLogger()).andReturn(logger).atLeastOnce();
+    }
+
+    protected final void train_getTokens(ComponentTemplate template, TemplateToken... tokens)
+    {
+        expect(template.getTokens()).andReturn(Arrays.asList(tokens));
+    }
+
+    protected final void train_getEmbeddedIds(ComponentModel model, String... ids)
+>>>>>>> refs/remotes/apache/5.0
     {
         return newMock(RenderCommand.class);
     }

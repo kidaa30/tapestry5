@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright 2008, 2009, 2011 The Apache Software Foundation
+=======
+// Copyright 2008 The Apache Software Foundation
+>>>>>>> refs/remotes/apache/5.0
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,11 +27,19 @@ import org.apache.tapestry5.runtime.RenderQueue;
  * A RenderCommand wrapper that renders internally a series of render commands. This is intended for static content
  * (commands that may write content, but won't affect the render queue itself.
  */
+<<<<<<< HEAD
 class CompositeRenderCommand implements RenderCommand
 {
     /**
      * Composite commands are intended for static elements; elements that won't invoke methods on the RenderQueue. To
      * enforce this, we have a NO-OP version of RenderQueue that is passed to the composed render commands.
+=======
+public class CompositeRenderCommand implements RenderCommand
+{
+    /**
+     * Composite commands are intended for static elements; elements that won't invoke methods on the RenderQueue. To
+     * enforce this, we have a NO-OP version of RenderQueue that is passed ot the composed render commands.
+>>>>>>> refs/remotes/apache/5.0
      */
     private static final RenderQueue NOOP = new RenderQueue()
     {
@@ -49,7 +61,12 @@ class CompositeRenderCommand implements RenderCommand
         private void nyi(String methodName)
         {
             throw new IllegalStateException(
+<<<<<<< HEAD
                     String.format("RenderQueue method %s() is not implemented for composited render commands.", methodName));
+=======
+                    String.format("RenderQueue method %s() is not implemented for composited render commands.",
+                                  methodName));
+>>>>>>> refs/remotes/apache/5.0
         }
     };
 
@@ -84,6 +101,10 @@ class CompositeRenderCommand implements RenderCommand
             comma = true;
         }
 
+<<<<<<< HEAD
         return builder.append(']').toString();
+=======
+        return builder.append("]").toString();
+>>>>>>> refs/remotes/apache/5.0
     }
 }

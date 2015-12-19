@@ -191,6 +191,7 @@ public class MarkupWriterImplTest extends InternalBaseTestCase
 
         w.attributes("foo", "bar", "gnip", "gnop");
 
+<<<<<<< HEAD
         assertEquals(w.toString(), "<root gnip=\"gnop\" foo=\"bar\"></root>");
     }
 
@@ -212,6 +213,9 @@ public class MarkupWriterImplTest extends InternalBaseTestCase
                     "An attribute name or value is omitted [src, foo.png, width, 20, 30].",
                     "Please provide an even number of values, alternating names and values");
         }
+=======
+        assertEquals(w.toString(), "<root foo=\"bar\" gnip=\"gnop\"></root>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright 2007, 2009, 2012 The Apache Software Foundation
+=======
+// Copyright 2007, 2009 The Apache Software Foundation
+>>>>>>> refs/remotes/apache/5.0
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +42,12 @@ public class ErrorReportingCommandProcessor implements CommandProcessor
     {
         StringBuilder builder = new StringBuilder();
 
+<<<<<<< HEAD
         builder.append("Selenium failure processing command ");
+=======
+        builder.append(BORDER);
+        builder.append("\nSelenium failure processing command ");
+>>>>>>> refs/remotes/apache/5.0
         builder.append(command);
         builder.append('(');
 
@@ -187,36 +196,56 @@ public class ErrorReportingCommandProcessor implements CommandProcessor
     }
 
     /**
+<<<<<<< HEAD
      * @since 5.1.0.0
      */
     @Override
+=======
+     * @since 5.0.19
+     */
+>>>>>>> refs/remotes/apache/5.0
     public String getRemoteControlServerLocation()
     {
         return delegate.getRemoteControlServerLocation();
     }
 
     /**
+<<<<<<< HEAD
      * @since 5.1.0.0
      */
     @Override
+=======
+     * @since 5.0.19
+     */
+>>>>>>> refs/remotes/apache/5.0
     public void setExtensionJs(String extensionJs)
     {
         delegate.setExtensionJs(extensionJs);
     }
 
     /**
+<<<<<<< HEAD
      * @since 5.1.0.0
      */
     @Override
+=======
+     * @since 5.0.19
+     */
+>>>>>>> refs/remotes/apache/5.0
     public void start(String optionsString)
     {
         delegate.start(optionsString);
     }
 
     /**
+<<<<<<< HEAD
      * @since 5.1.0.0
      */
     @Override
+=======
+     * @since 5.0.19
+     */
+>>>>>>> refs/remotes/apache/5.0
     public void start(Object optionsObject)
     {
         delegate.start(optionsObject);

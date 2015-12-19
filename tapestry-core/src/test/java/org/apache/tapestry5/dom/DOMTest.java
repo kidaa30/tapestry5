@@ -563,13 +563,21 @@ public class DOMTest extends InternalBaseTestCase
         mobile.text("On the move");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><placeholder></placeholder><target></target><source><mobile>On the move</mobile></source></doc>");
+=======
+                     "<doc><placeholder></placeholder><target></target><source><mobile>On the move</mobile></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
 
         mobile.moveBefore(target);
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><placeholder></placeholder><mobile>On the move</mobile><target></target><source></source></doc>");
+=======
+                     "<doc><placeholder></placeholder><mobile>On the move</mobile><target></target><source></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test
@@ -586,13 +594,21 @@ public class DOMTest extends InternalBaseTestCase
         mobile.text("On the move");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><placeholder></placeholder><target></target><source><mobile>On the move</mobile></source></doc>");
+=======
+                     "<doc><placeholder></placeholder><target></target><source><mobile>On the move</mobile></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
 
         mobile.moveAfter(target);
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><placeholder></placeholder><target></target><mobile>On the move</mobile><source></source></doc>");
+=======
+                     "<doc><placeholder></placeholder><target></target><mobile>On the move</mobile><source></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test
@@ -609,12 +625,20 @@ public class DOMTest extends InternalBaseTestCase
         mobile.text("On the move");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><target><placeholder></placeholder></target><source><mobile>On the move</mobile></source></doc>");
+=======
+                     "<doc><target><placeholder></placeholder></target><source><mobile>On the move</mobile></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
         mobile.moveToTop(target);
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><target><mobile>On the move</mobile><placeholder></placeholder></target><source></source></doc>");
+=======
+                     "<doc><target><mobile>On the move</mobile><placeholder></placeholder></target><source></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test
@@ -631,12 +655,20 @@ public class DOMTest extends InternalBaseTestCase
         mobile.text("On the move");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><target><placeholder></placeholder></target><source><mobile>On the move</mobile></source></doc>");
+=======
+                     "<doc><target><placeholder></placeholder></target><source><mobile>On the move</mobile></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
         mobile.moveToBottom(target);
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><target><placeholder></placeholder><mobile>On the move</mobile></target><source></source></doc>");
+=======
+                     "<doc><target><placeholder></placeholder><mobile>On the move</mobile></target><source></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test
@@ -655,12 +687,20 @@ public class DOMTest extends InternalBaseTestCase
         mobile.text("On the move");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><before></before><source><mobile>On the move</mobile><grok></grok></source><after></after></doc>");
+=======
+                     "<doc><before></before><source><mobile>On the move</mobile><grok></grok></source><after></after></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
         source.removeChildren();
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><before></before><source></source><after></after></doc>");
+=======
+                     "<doc><before></before><source></source><after></after></doc>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test
@@ -675,12 +715,20 @@ public class DOMTest extends InternalBaseTestCase
         source.element("grok");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><source><mobile>On the move</mobile><grok></grok></source></doc>");
+=======
+                     "<doc><source><mobile>On the move</mobile><grok></grok></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
         source.pop();
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><mobile>On the move</mobile><grok></grok></doc>");
+=======
+                     "<doc><mobile>On the move</mobile><grok></grok></doc>");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     @Test
@@ -720,16 +768,28 @@ public class DOMTest extends InternalBaseTestCase
         Node text = mobile.text("On the move");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><target><placeholder></placeholder></target><source><mobile>On the move</mobile></source></doc>");
+=======
+                     "<doc><target><placeholder></placeholder></target><source><mobile>On the move</mobile></source></doc>");
+>>>>>>> refs/remotes/apache/5.0
 
         text.wrap("em", "class", "bold");
 
         assertEquals(d.toString(),
+<<<<<<< HEAD
                 "<doc><target><placeholder></placeholder></target><source><mobile><em class=\"bold\">On the move</em></mobile></source></doc>");
     }
 
     /**
      * TAP5-385
+=======
+                     "<doc><target><placeholder></placeholder></target><source><mobile><em class=\"bold\">On the move</em></mobile></source></doc>");
+    }
+
+    /**
+     * TAP5-401
+>>>>>>> refs/remotes/apache/5.0
      */
     @Test
     public void empty_html_elements()
@@ -743,6 +803,7 @@ public class DOMTest extends InternalBaseTestCase
         root.element("img");
 
         assertEquals(d.toString(), "<doc><hr/><br/><img/></doc>");
+<<<<<<< HEAD
     }
 
     /**
@@ -976,5 +1037,7 @@ public class DOMTest extends InternalBaseTestCase
         
         assertEquals(writer.toString(),
                 "<html><area><base><br><col><command><embed><hr><img><input><keygen><link><meta><param><source><track><wbr></html>");
+=======
+>>>>>>> refs/remotes/apache/5.0
     }
 }

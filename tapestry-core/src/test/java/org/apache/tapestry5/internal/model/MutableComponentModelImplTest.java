@@ -818,7 +818,11 @@ public class MutableComponentModelImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         MutableComponentModel model = new MutableComponentModelImpl(CLASS_NAME, logger, r, null, false, null);
+=======
+        MutableComponentModel model = new MutableComponentModelImpl(CLASS_NAME, logger, r, null);
+>>>>>>> refs/remotes/apache/5.0
 
 
         assertFalse(model.getHandledRenderPhases().contains(BeginRender.class));
@@ -837,7 +841,11 @@ public class MutableComponentModelImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         MutableComponentModel model = new MutableComponentModelImpl(CLASS_NAME, logger, r, null, false, null);
+=======
+        MutableComponentModel model = new MutableComponentModelImpl(CLASS_NAME, logger, r, null);
+>>>>>>> refs/remotes/apache/5.0
 
         model.addRenderPhase(BeginRender.class);
 
@@ -857,8 +865,13 @@ public class MutableComponentModelImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         MutableComponentModel parent = new MutableComponentModelImpl(CLASS_NAME, logger, r, null, false, null);
         MutableComponentModel child = new MutableComponentModelImpl(CLASS_NAME, logger, r, parent, false, null);
+=======
+        MutableComponentModel parent = new MutableComponentModelImpl(CLASS_NAME, logger, r, null);
+        MutableComponentModel child = new MutableComponentModelImpl(CLASS_NAME, logger, r, parent);
+>>>>>>> refs/remotes/apache/5.0
 
         parent.addRenderPhase(BeginRender.class);
 

@@ -48,9 +48,14 @@ public class Email extends AbstractValidator<Void, String>
     public void render(Field field, Void constraintValue, MessageFormatter formatter, MarkupWriter writer,
                        FormSupport formSupport)
     {
+<<<<<<< HEAD
         if (formSupport.isClientValidationEnabled())
         {
             javaScriptSupport.require("t5/core/validation");
+=======
+        // Do nothing; we don't yet support client-side validation.
+    }
+>>>>>>> refs/remotes/apache/5.0
 
             writer.attributes(
                     DataConstants.VALIDATION_ATTRIBUTE, true,

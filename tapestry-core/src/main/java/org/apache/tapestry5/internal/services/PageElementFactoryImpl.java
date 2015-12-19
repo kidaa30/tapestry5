@@ -25,6 +25,10 @@ import org.apache.tapestry5.internal.structure.ExpansionPageElement;
 import org.apache.tapestry5.ioc.Location;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
+<<<<<<< HEAD
+=======
+import org.apache.tapestry5.model.ComponentModel;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.runtime.RenderCommand;
 import org.apache.tapestry5.runtime.RenderQueue;
 import org.apache.tapestry5.services.BindingSource;

@@ -545,5 +545,10 @@ public class SymbolConstants
      * @see org.apache.tapestry5.services.pageload.PreloaderMode
      * @since 5.4
      */
+<<<<<<< HEAD
     public static final String PRELOADER_MODE = "tapestry.page-preload-mode";
+=======
+    public static final String SCRIPTS_AT_TOP = "tapestry.script-at-top";
+
+>>>>>>> refs/remotes/apache/5.0
 }

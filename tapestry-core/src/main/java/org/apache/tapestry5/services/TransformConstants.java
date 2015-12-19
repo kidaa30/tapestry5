@@ -25,19 +25,32 @@ import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 import java.lang.reflect.Modifier;
 
 /**
+<<<<<<< HEAD
  * Constants used by implementations {@link ComponentClassTransformWorker2}.
  *
  * Note: render phase methods on transformed components will not be invoked <em>unless</em>
  * {@linkplain org.apache.tapestry5.model.MutableComponentModel#addRenderPhase(Class) the component model is updated to
  * identify the use of the corresponding render phase}. This represents an optimization introduced in Tapestry 5.1.
+=======
+ * Constants used by implementations of {@link org.apache.tapestry5.services.ComponentClassTransformWorker}.
+ * <p/>
+ * Note: methods on transformed components will not be invoked <em>unless</em> {@linkplain
+ * org.apache.tapestry5.model.MutableComponentModel#addRenderPhase(Class) the component model is updated to identify the
+ * use of the corresponding render phase}.
+>>>>>>> refs/remotes/apache/5.0
  */
 public final class TransformConstants
 {
     // Shared parameters of a whole bunch of lifecycle methods, representing the different
     // component render states.
+<<<<<<< HEAD
     private static final String[] RENDER_PHASE_METHOD_PARAMETERS =
             {MarkupWriter.class.getName(), Event.class.getName()};
 
+=======
+    private static final String[] RENDER_PHASE_METHOD_PARAMETERS = {MarkupWriter.class.getName(),
+            Event.class.getName()};
+>>>>>>> refs/remotes/apache/5.0
 
     /**
      * Description for
@@ -56,8 +69,14 @@ public final class TransformConstants
      *
      * @since 5.3
      */
+<<<<<<< HEAD
     public static final MethodDescription CONTAINING_PAGE_DID_LOAD_DESCRIPTION = PlasticUtils.getMethodDescription(
             PageLifecycleListener.class, "containingPageDidLoad");
+=======
+    public static final TransformMethodSignature DISPATCH_COMPONENT_EVENT = new TransformMethodSignature(
+            Modifier.PUBLIC, "boolean", "dispatchComponentEvent", new String[] {ComponentEvent.class.getName()},
+            null);
+>>>>>>> refs/remotes/apache/5.0
 
     /**
      * Description for {@link org.apache.tapestry5.internal.structure.PageResetListener#containingPageDidReset()}. Note that the {@link PageResetListener}

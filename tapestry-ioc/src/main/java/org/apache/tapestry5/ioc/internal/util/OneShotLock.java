@@ -46,14 +46,22 @@ public class OneShotLock extends LockSupport
         if (lock)
         {
             // The depth to find the caller of the check() or lock() method varies between JDKs.
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/apache/5.0
 
             StackTraceElement[] elements = Thread.currentThread().getStackTrace();
 
             int i = 0;
             while (!elements[i].getMethodName().equals("innerCheck"))
+<<<<<<< HEAD
             {
                 i++;
             }
+=======
+                i++;
+>>>>>>> refs/remotes/apache/5.0
 
             throw new IllegalStateException(UtilMessages.oneShotLock(elements[i + 2]));
         }

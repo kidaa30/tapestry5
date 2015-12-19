@@ -20,6 +20,7 @@ import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.func.Flow;
 import org.apache.tapestry5.func.Predicate;
 import org.apache.tapestry5.internal.InternalComponentResources;
+import org.apache.tapestry5.internal.ParameterAccess;
 import org.apache.tapestry5.internal.bindings.LiteralBinding;
 import org.apache.tapestry5.internal.services.ComponentClassCache;
 import org.apache.tapestry5.ioc.internal.util.InternalUtils;
@@ -71,6 +72,7 @@ public class ParameterWorker implements ComponentClassTransformWorker2
 
     private final ComponentDefaultProvider defaultProvider;
 
+<<<<<<< HEAD
     private final TypeCoercer typeCoercer;
 
     private final PerthreadManager perThreadManager;
@@ -83,14 +85,68 @@ public class ParameterWorker implements ComponentClassTransformWorker2
         this.defaultProvider = defaultProvider;
         this.typeCoercer = typeCoercer;
         this.perThreadManager = perThreadManager;
+=======
+        String accessFieldName = addParameterSetup(name, annotation.defaultPrefix(), annotation.value(),
+                                                   parameterName, cachedFieldName, cache, type, resourcesFieldName,
+                                                   transformation, annotation.autoconnect());
+
+        addReaderMethod(name, cachedFieldName, accessFieldName, cache, parameterName, type, resourcesFieldName,
+                        transformation);
+
+        addWriterMethod(name, cachedFieldName, accessFieldName, cache, parameterName, type, resourcesFieldName,
+                        transformation);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     private final Comparator<PlasticField> byPrincipalThenName = new Comparator<PlasticField>()
     {
+<<<<<<< HEAD
         public int compare(PlasticField o1, PlasticField o2)
         {
             boolean principal1 = o1.getAnnotation(Parameter.class).principal();
             boolean principal2 = o2.getAnnotation(Parameter.class).principal();
+=======
+
+        String accessFieldName = transformation.addField(Modifier.PRIVATE, ParameterAccess.class.getName(),
+                                                         fieldName + "_access");
+
+        String defaultFieldName = transformation.addField(Modifier.PRIVATE, fieldType, fieldName + "_default");
+
+        BodyBuilder builder = new BodyBuilder().begin();
+
+        addDefaultBindingSetup(parameterName, defaultPrefix, defaultBinding, resourcesFieldName,
+                               transformation,
+                               builder, autoconnect);
+
+        // Order is (alas) important here: must invoke getParameterAccess() after the binding setup, as
+        // that code may invoke InternalComponentResources.bindParameter().
+
+        builder.addln("%s = %s.getParameterAccess(\"%s\");", accessFieldName, resourcesFieldName, parameterName);
+
+        // Store the current value of the field into the default field. This value will
+        // be used to reset the field after rendering.
+
+        builder.addln("%s = %s;", defaultFieldName, fieldName);
+        builder.end();
+
+        transformation.extendMethod(TransformConstants.CONTAINING_PAGE_DID_LOAD_SIGNATURE, builder
+                .toString());
+
+        // Now, when the component completes rendering, ensure that any variant parameters are
+        // are returned to default value. This isn't necessary when the parameter is not cached,
+        // because (unless the binding is invariant), there's no value to get rid of (and if it is
+        // invariant, there's no need to get rid of it).
+
+        if (cache)
+        {
+            builder.clear();
+
+            builder.addln("if (! %s.isInvariant())", accessFieldName);
+            builder.begin();
+            builder.addln("%s = %s;", fieldName, defaultFieldName);
+            builder.addln("%s = false;", cachedFieldName);
+            builder.end();
+>>>>>>> refs/remotes/apache/5.0
 
             if (principal1 == principal2)
             {
@@ -110,10 +166,21 @@ public class ParameterWorker implements ComponentClassTransformWorker2
         {
             convertFieldIntoParameter(plasticClass, model, field);
         }
+<<<<<<< HEAD
     }
 
     private void convertFieldIntoParameter(PlasticClass plasticClass, MutableComponentModel model,
                                            PlasticField field)
+=======
+
+        return accessFieldName;
+    }
+
+    private void addDefaultBindingSetup(String parameterName, String defaultPrefix, String defaultBinding,
+                                        String resourcesFieldName,
+                                        ClassTransformation transformation,
+                                        BodyBuilder builder, boolean autoconnect)
+>>>>>>> refs/remotes/apache/5.0
     {
 
         Parameter annotation = field.getAnnotation(Parameter.class);
@@ -135,6 +202,10 @@ public class ParameterWorker implements ComponentClassTransformWorker2
         field.setComputedConduit(computedParameterConduit);
     }
 
+<<<<<<< HEAD
+=======
+        final String methodName = "default" + parameterName;
+>>>>>>> refs/remotes/apache/5.0
 
     private MethodHandle findDefaultMethodHandle(PlasticClass plasticClass, String parameterName)
     {
@@ -144,8 +215,13 @@ public class ParameterWorker implements ComponentClassTransformWorker2
         {
             public boolean accept(PlasticMethod method)
             {
+<<<<<<< HEAD
                 return method.getDescription().argumentTypes.length == 0
                         && method.getDescription().methodName.equalsIgnoreCase(methodName);
+=======
+                return signature.getParameterTypes().length == 0
+                        && signature.getMethodName().equalsIgnoreCase(methodName);
+>>>>>>> refs/remotes/apache/5.0
             }
         };
 
@@ -154,6 +230,7 @@ public class ParameterWorker implements ComponentClassTransformWorker2
         // This will match exactly 0 or 1 (unless the user does something really silly)
         // methods, and if it matches, we know the name of the method.
 
+<<<<<<< HEAD
         return matches.isEmpty() ? null : matches.first().getHandle();
     }
 
@@ -163,6 +240,46 @@ public class ParameterWorker implements ComponentClassTransformWorker2
                                                                                final MethodHandle defaultMethodHandle)
     {
         boolean primitive = PlasticUtils.isPrimitive(fieldTypeName);
+=======
+        // Because the check was case-insensitive, we need to determine the actual
+        // name.
+
+        String actualMethodName = signatures.get(0).getMethodName();
+
+        builder.addln("if (! %s.isBound(\"%s\"))", resourcesFieldName, parameterName);
+        builder.addln("  %s(\"%s\", %s, ($w) %s());",
+                      BIND_METHOD_NAME,
+                      parameterName,
+                      resourcesFieldName,
+                      actualMethodName);
+    }
+
+    private void addWriterMethod(String fieldName, String cachedFieldName, String accessFieldName, boolean cache,
+                                 String parameterName,
+                                 String fieldType, String resourcesFieldName,
+                                 ClassTransformation transformation)
+    {
+        BodyBuilder builder = new BodyBuilder();
+        builder.begin();
+
+        // Before the component is loaded, updating the property sets the default value
+        // for the parameter. The value is stored in the field, but will be
+        // rolled into default field inside containingPageDidLoad().
+
+        builder.addln("if (! %s.isLoaded())", resourcesFieldName);
+        builder.begin();
+        builder.addln("%s = $1;", fieldName);
+        builder.addln("return;");
+        builder.end();
+
+        // Always start by updating the parameter; this will implicitly check for
+        // read-only or unbound parameters. $1 is the single parameter
+        // to the method.
+
+        builder.addln("%s.write(($w)$1);", accessFieldName);
+
+        builder.addln("%s = $1;", fieldName);
+>>>>>>> refs/remotes/apache/5.0
 
         final boolean allowNull = annotation.allowNull() && !primitive;
 
@@ -172,12 +289,29 @@ public class ParameterWorker implements ComponentClassTransformWorker2
             {
                 final InternalComponentResources icr = context.get(InternalComponentResources.class);
 
+<<<<<<< HEAD
                 final Class fieldType = classCache.forName(fieldTypeName);
+=======
+    /**
+     * Adds a private method that will be the replacement for read-access to the field.
+     */
+    private void addReaderMethod(String fieldName, String cachedFieldName, String accessFieldName, boolean cache,
+                                 String parameterName, String fieldType, String resourcesFieldName,
+                                 ClassTransformation transformation)
+    {
+        BodyBuilder builder = new BodyBuilder();
+        builder.begin();
+>>>>>>> refs/remotes/apache/5.0
 
                 final PerThreadValue<ParameterState> stateValue = perThreadManager.createValue();
 
+<<<<<<< HEAD
                 // Rely on some code generation in the component to set the default binding from
                 // the field, or from a default method.
+=======
+        builder.addln("if (%s || ! %s.isLoaded() || ! %s.isBound()) return %s;", cachedFieldName,
+                      resourcesFieldName, accessFieldName, fieldName);
+>>>>>>> refs/remotes/apache/5.0
 
                 return new ParameterConduit()
                 {
@@ -409,17 +543,25 @@ public class ParameterWorker implements ComponentClassTransformWorker2
 
                         // Invoke the default method and install any value or Binding returned there.
 
+<<<<<<< HEAD
                         invokeDefaultMethod();
+=======
+        builder.addln("%s result = ($r) ((%s) %s.read(\"%2$s\"));", fieldType, cast, accessFieldName);
+>>>>>>> refs/remotes/apache/5.0
 
                         return parameterBinding;
                     }
 
+<<<<<<< HEAD
                     private void invokeDefaultMethod()
                     {
                         if (defaultMethodHandle == null)
                         {
                             return;
                         }
+=======
+        builder.add("if (%s.isInvariant()", accessFieldName);
+>>>>>>> refs/remotes/apache/5.0
 
                         if (logger.isDebugEnabled())
                         {
@@ -453,7 +595,14 @@ public class ParameterWorker implements ComponentClassTransformWorker2
         };
     }
 
+<<<<<<< HEAD
     private static String getParameterName(String fieldName, String annotatedName)
+=======
+    /**
+     * Invoked from generated code as part of the handling of parameter default methods.
+     */
+    public static void bind(String parameterName, InternalComponentResources resources, Object value)
+>>>>>>> refs/remotes/apache/5.0
     {
         if (InternalUtils.isNonBlank(annotatedName))
         {

@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import java.util.*;
 
 /**
+<<<<<<< HEAD
  * Implements {@link RenderCommand} and represents a component within an overall page. Much of a
  * component page
  * element's behavior is delegated to user code, via a {@link org.apache.tapestry5.runtime.Component} instance.
@@ -53,6 +54,15 @@ import java.util.*;
  * class (and its many inner classes) that can improve overall efficiency.
  *
  * Modified for Tapestry 5.2 to adjust for the no-pooling approach (shared instances with externalized mutable state).
+=======
+ * Implements {@link RenderCommand} and represents a component within an overall page. Much of a component page
+ * element's behavior is delegated to user code, via a {@link org.apache.tapestry5.runtime.Component} instance.
+ * <p/>
+ * Once instantiated, a ComponentPageElement should be registered as a {@linkplain
+ * org.apache.tapestry5.internal.structure.Page#addLifecycleListener(org.apache.tapestry5.runtime.PageLifecycleListener)
+ * lifecycle listener}. This could be done inside the constructors, but that tends to complicate unit tests, so its done
+ * by {@link org.apache.tapestry5.internal.services.PageElementFactoryImpl}.
+>>>>>>> refs/remotes/apache/5.0
  */
 public class ComponentPageElementImpl extends BaseLocatable implements ComponentPageElement
 {
@@ -78,6 +88,34 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
 
     private static final Block PLACEHOLDER_BLOCK = new PlaceholderBlock();
 
+<<<<<<< HEAD
+=======
+
+    private static final ComponentCallback CONTAINING_PAGE_DID_ATTACH = new LifecycleNotificationComponentCallback()
+    {
+        public void run(Component component)
+        {
+            component.containingPageDidAttach();
+        }
+    };
+
+    private static final ComponentCallback CONTAINING_PAGE_DID_DETACH = new LifecycleNotificationComponentCallback()
+    {
+        public void run(Component component)
+        {
+            component.containingPageDidDetach();
+        }
+    };
+
+    private static final ComponentCallback CONTAINING_PAGE_DID_LOAD = new LifecycleNotificationComponentCallback()
+    {
+        public void run(Component component)
+        {
+            component.containingPageDidLoad();
+        }
+    };
+
+>>>>>>> refs/remotes/apache/5.0
     private static final ComponentCallback POST_RENDER_CLEANUP = new LifecycleNotificationComponentCallback()
     {
         public void run(Component component)
@@ -101,6 +139,7 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         return list == null ? 0 : list.size();
     }
 
+<<<<<<< HEAD
     private abstract class AbstractPhase implements RenderCommand
     {
         private final String name;
@@ -191,8 +230,81 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         private BeginRenderPhase()
         {
             super("BeginRender");
+=======
+    private abstract class AbstractPhase extends AbstractComponentCallback implements RenderCommand
+    {
+        private final String name;
+
+        private MarkupWriter writer;
+
+        public AbstractPhase(String name)
+        {
+            super(sharedEvent);
+
+            this.name = name;
         }
 
+        @Override
+        public String toString()
+        {
+            return phaseToString(name);
+        }
+
+        void reset(RenderQueue queue)
+        {
+            sharedEventHandler.queueCommands(queue);
+
+            sharedEventHandler.reset();
+
+            sharedEvent.reset();
+
+            writer = null;
+        }
+
+        void callback(boolean reverse, MarkupWriter writer)
+        {
+            this.writer = writer;
+
+            invoke(reverse, this);
+        }
+
+        public void run(Component component)
+        {
+            invokeComponent(component, writer, sharedEvent);
+        }
+
+        protected boolean getResult()
+        {
+            return sharedEventHandler.getResult();
+        }
+
+        protected abstract void invokeComponent(Component component, MarkupWriter writer, Event event);
+    }
+
+    private class SetupRenderPhase extends AbstractPhase
+    {
+        public SetupRenderPhase()
+        {
+            super("SetupRender");
+        }
+
+        protected void invokeComponent(Component component, MarkupWriter writer, Event event)
+        {
+            component.setupRender(writer, event);
+        }
+
+        public void render(final MarkupWriter writer, RenderQueue queue)
+        {
+            callback(false, writer);
+
+            push(queue, getResult(), beginRenderPhase, cleanupRenderPhase);
+
+            reset(queue);
+>>>>>>> refs/remotes/apache/5.0
+        }
+    }
+
+<<<<<<< HEAD
         protected void invokeComponent(Component component, MarkupWriter writer, Event event)
         {
             if (isRenderTracingEnabled())
@@ -212,6 +324,28 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
             push(queue, event.getResult(), beforeRenderTemplatePhase, null);
 
             event.enqueueSavedRenderCommands();
+=======
+    private class BeginRenderPhase extends AbstractPhase
+    {
+        private BeginRenderPhase()
+        {
+            super("BeginRender");
+        }
+
+        protected void invokeComponent(Component component, MarkupWriter writer, Event event)
+        {
+            component.beginRender(writer, event);
+        }
+
+        public void render(final MarkupWriter writer, final RenderQueue queue)
+        {
+            callback(false, writer);
+
+            push(queue, afterRenderPhase);
+            push(queue, getResult(), beforeRenderTemplatePhase, null);
+
+            reset(queue);
+>>>>>>> refs/remotes/apache/5.0
         }
     }
 
@@ -235,10 +369,15 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
     }
 
     /**
+<<<<<<< HEAD
      * Reponsible for rendering the component's template. Even a component that doesn't have a
      * template goes through
      * this phase, as a synthetic template (used to trigger the rendering of the component's body)
      * will be supplied.
+=======
+     * Reponsible for rendering the component's template.  Even a component that doesn't have a template goes through
+     * this phase, as a synthetic template (used to trigger the rendering of the component's body) will be supplied.
+>>>>>>> refs/remotes/apache/5.0
      */
     private class BeforeRenderTemplatePhase extends AbstractPhase
     {
@@ -247,6 +386,10 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
             super("BeforeRenderTemplate");
         }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/apache/5.0
         protected void invokeComponent(Component component, MarkupWriter writer, Event event)
         {
             component.beforeRenderTemplate(writer, event);
@@ -254,6 +397,7 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
 
         public void render(final MarkupWriter writer, final RenderQueue queue)
         {
+<<<<<<< HEAD
             RenderPhaseEvent event = createRenderEvent(queue);
 
             invoke(writer, event);
@@ -277,6 +421,28 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         {
             push(queue, afterRenderTemplatePhase);
 
+=======
+            callback(false, writer);
+
+            push(queue, afterRenderTemplatePhase);
+
+            if (getResult())
+                pushElements(queue, template);
+
+            reset(queue);
+        }
+    }
+
+    /**
+     * Alternative version of BeforeRenderTemplatePhase used when the BeforeRenderTemplate render phase is not handled.
+     */
+    private class RenderTemplatePhase implements RenderCommand
+    {
+        public void render(MarkupWriter writer, RenderQueue queue)
+        {
+            push(queue, afterRenderTemplatePhase);
+
+>>>>>>> refs/remotes/apache/5.0
             pushElements(queue, template);
         }
 
@@ -298,6 +464,7 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         {
             component.beforeRenderBody(writer, event);
         }
+<<<<<<< HEAD
 
         public void render(final MarkupWriter writer, RenderQueue queue)
         {
@@ -344,8 +511,48 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         private AfterRenderTemplatePhase()
         {
             super("AfterRenderTemplate", true);
+=======
+
+        public void render(final MarkupWriter writer, RenderQueue queue)
+        {
+            callback(false, writer);
+
+            push(queue, afterRenderBodyPhase);
+
+            if (getResult() && bodyBlock != null)
+                queue.push(bodyBlock);
+
+            reset(queue);
+        }
+    }
+
+
+    private class AfterRenderBodyPhase extends AbstractPhase
+    {
+
+        private AfterRenderBodyPhase()
+        {
+            super("AfterRenderBody");
         }
 
+
+        protected void invokeComponent(Component component, MarkupWriter writer, Event event)
+        {
+            component.afterRenderBody(writer, event);
+        }
+
+        public void render(final MarkupWriter writer, RenderQueue queue)
+        {
+            callback(true, writer);
+
+            push(queue, getResult(), null, beforeRenderBodyPhase);
+
+            reset(queue);
+>>>>>>> refs/remotes/apache/5.0
+        }
+    }
+
+<<<<<<< HEAD
         protected void invokeComponent(Component component, MarkupWriter writer, Event event)
         {
             component.afterRenderTemplate(writer, event);
@@ -360,9 +567,39 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
             push(queue, event.getResult(), null, beforeRenderTemplatePhase);
 
             event.enqueueSavedRenderCommands();
+=======
+    private class AfterRenderTemplatePhase extends AbstractPhase
+    {
+        private AfterRenderTemplatePhase()
+        {
+            super("AfterRenderTemplate");
+        }
+
+        protected void invokeComponent(Component component, MarkupWriter writer, Event event)
+        {
+            component.afterRenderTemplate(writer, event);
+        }
+
+        public void render(final MarkupWriter writer, final RenderQueue queue)
+        {
+            callback(true, writer);
+
+            push(queue, getResult(), null, beforeRenderTemplatePhase);
+
+            reset(queue);
         }
     }
 
+    private class AfterRenderPhase extends AbstractPhase
+    {
+        private AfterRenderPhase()
+        {
+            super("AfterRender");
+>>>>>>> refs/remotes/apache/5.0
+        }
+    }
+
+<<<<<<< HEAD
     private class AfterRenderPhase extends AbstractPhase
     {
         private AfterRenderPhase()
@@ -443,6 +680,79 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
             invoke(false, POST_RENDER_CLEANUP);
 
             queue.endComponent();
+=======
+        protected void invokeComponent(Component component, MarkupWriter writer, Event event)
+        {
+            component.afterRender(writer, event);
+        }
+
+        public void render(final MarkupWriter writer, RenderQueue queue)
+        {
+            callback(true, writer);
+
+            push(queue, getResult(), cleanupRenderPhase, beginRenderPhase);
+
+            reset(queue);
+        }
+    }
+
+
+    private class CleanupRenderPhase extends AbstractPhase
+    {
+        private CleanupRenderPhase()
+        {
+            super("CleanupRender");
+        }
+
+        protected void invokeComponent(Component component, MarkupWriter writer, Event event)
+        {
+            component.cleanupRender(writer, event);
+        }
+
+        public void render(final MarkupWriter writer, RenderQueue queue)
+        {
+            callback(true, writer);
+
+            push(queue, getResult(), null, setupRenderPhase);
+
+            reset(queue);
+        }
+    }
+
+    private class PostRenderCleanupPhase implements RenderCommand
+    {
+        /**
+         * Used to detect mismatches calls to {@link MarkupWriter#element(String, Object[])} } and {@link
+         * org.apache.tapestry5.MarkupWriter#end()}.  The expectation is that any element(s) begun by this component
+         * during rendering will be balanced by end() calls, resulting in the current element reverting to its initial
+         * value.
+         */
+        private final Element expectedElementAtCompletion;
+
+        PostRenderCleanupPhase(Element expectedElementAtCompletion)
+        {
+            this.expectedElementAtCompletion = expectedElementAtCompletion;
+        }
+
+        public void render(MarkupWriter writer, RenderQueue queue)
+        {
+            rendering = false;
+
+            Element current = writer.getElement();
+
+            if (current != expectedElementAtCompletion)
+                throw new TapestryException(StructureMessages.unbalancedElements(completeId), getLocation(), null);
+
+            invoke(false, POST_RENDER_CLEANUP);
+
+            queue.endComponent();
+
+            // Now and only now the component is done rendering and fully cleaned up. Decrement
+            // the page's dirty count. If the entire render goes well, then the page will be
+            // clean and can be stored into the pool for later reuse.
+
+            page.decrementDirtyCount();
+>>>>>>> refs/remotes/apache/5.0
         }
 
         @Override
@@ -452,6 +762,7 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         }
     }
 
+<<<<<<< HEAD
     private NamedSet<Block> blocks;
 
     private BlockImpl bodyBlock;
@@ -460,6 +771,18 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
 
     private final String elementName;
 
+=======
+    private Map<String, Block> blocks;
+
+    private BlockImpl bodyBlock;
+
+    private Map<String, ComponentPageElement> children;
+
+    private final String elementName;
+
+    private final PageResources pageResources;
+
+>>>>>>> refs/remotes/apache/5.0
     private final Logger eventLogger;
 
     private final String completeId;
@@ -501,15 +824,29 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
 
     private final PerThreadValue<Boolean> renderingValue;
 
+<<<<<<< HEAD
     private final boolean exactParameterCountMatch;
+=======
+>>>>>>> refs/remotes/apache/5.0
 
     // We know that, at the very least, there will be an element to force the component to render
     // its body, so there's no reason to wait to initialize the list.
 
     private final List<RenderCommand> template = CollectionFactory.newList();
 
+<<<<<<< HEAD
     private RenderCommand setupRenderPhase, beginRenderPhase, beforeRenderTemplatePhase, beforeRenderBodyPhase,
             afterRenderBodyPhase, afterRenderTemplatePhase, afterRenderPhase, cleanupRenderPhase;
+=======
+    private boolean renderPhasesInitalized;
+
+    private RenderCommand setupRenderPhase, beginRenderPhase, beforeRenderTemplatePhase, beforeRenderBodyPhase,
+            afterRenderBodyPhase, afterRenderTemplatePhase, afterRenderPhase, cleanupRenderPhase;
+
+    private final RenderPhaseEventHandler sharedEventHandler = new RenderPhaseEventHandler();
+
+    private final EventImpl sharedEvent;
+>>>>>>> refs/remotes/apache/5.0
 
     /**
      * Constructor for other components embedded within the root component or at deeper levels of
@@ -565,7 +902,21 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
             {
                 pageLoaded();
             }
+<<<<<<< HEAD
         });
+=======
+        }
+
+        coreResources = new InternalComponentResourcesImpl(this.page, this, containerResources, this.pageResources,
+                                                           completeId, nestedId, instantiator);
+
+        coreComponent = coreResources.getComponent();
+
+        Logger logger = coreResources.getLogger();
+        eventLogger = pageResources.getEventLogger(logger);
+
+        sharedEvent = new EventImpl(sharedEventHandler, eventLogger);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     /**
@@ -578,6 +929,85 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
     }
 
     private void initializeRenderPhases()
+<<<<<<< HEAD
+=======
+    {
+        setupRenderPhase = new SetupRenderPhase();
+        beginRenderPhase = new BeginRenderPhase();
+        beforeRenderTemplatePhase = new BeforeRenderTemplatePhase();
+        beforeRenderBodyPhase = new BeforeRenderBodyPhase();
+        afterRenderBodyPhase = new AfterRenderBodyPhase();
+        afterRenderTemplatePhase = new AfterRenderTemplatePhase();
+        afterRenderPhase = new AfterRenderPhase();
+        cleanupRenderPhase = new CleanupRenderPhase();
+
+
+        // Now the optimization, where we remove, replace and collapse unused phases. We use
+        // the component models to determine which phases have handler methods for the
+        // render phases.
+
+        Set<Class> handled = coreResources.getComponentModel().getHandledRenderPhases();
+
+        if (mixinIdToComponentResources != null)
+        {
+            for (ComponentResources r : mixinIdToComponentResources.values())
+                handled.addAll(r.getComponentModel().getHandledRenderPhases());
+        }
+
+        if (!handled.contains(CleanupRender.class)) cleanupRenderPhase = null;
+
+        // Now, work back to front.
+
+        if (!handled.contains(AfterRender.class))
+            afterRenderPhase = cleanupRenderPhase;
+
+        if (!handled.contains(AfterRenderTemplate.class))
+            afterRenderTemplatePhase = null;
+
+        if (!handled.contains(AfterRenderBody.class))
+            afterRenderBodyPhase = null;
+
+        if (!handled.contains(BeforeRenderTemplate.class))
+            beforeRenderTemplatePhase = new RenderTemplatePhase();
+
+        if (!handled.contains(BeginRender.class))
+        {
+            RenderCommand replacement = afterRenderPhase != null
+                                        ? new OptimizedBeginRenderPhase()
+                                        : beforeRenderTemplatePhase;
+
+            beginRenderPhase = replacement;
+        }
+
+        if (!handled.contains(SetupRender.class))
+            setupRenderPhase = beginRenderPhase;
+
+        renderPhasesInitalized = true;
+    }
+
+    public ComponentPageElement newChild(String id, String elementName, Instantiator instantiator, Location location)
+    {
+        ComponentPageElementImpl child = new ComponentPageElementImpl(page, this, id, elementName, instantiator,
+                                                                      location, pageResources);
+
+        addEmbeddedElement(child);
+
+        return child;
+    }
+
+    void push(RenderQueue queue, boolean forward, RenderCommand forwardPhase, RenderCommand backwardPhase)
+    {
+        push(queue, forward ? forwardPhase : backwardPhase);
+    }
+
+    void push(RenderQueue queue, RenderCommand nextPhase)
+    {
+        if (nextPhase != null)
+            queue.push(nextPhase);
+    }
+
+    void addEmbeddedElement(ComponentPageElement child)
+>>>>>>> refs/remotes/apache/5.0
     {
         setupRenderPhase = new SetupRenderPhase();
         beginRenderPhase = new BeginRenderPhase();
@@ -602,7 +1032,14 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
         if (!handled.contains(CleanupRender.class))
             cleanupRenderPhase = null;
 
+<<<<<<< HEAD
         // Now, work back to front.
+=======
+        ComponentPageElement existing = children.get(childId);
+
+        if (existing != null)
+            throw new TapestryException(StructureMessages.duplicateChildComponent(this, childId), child, null);
+>>>>>>> refs/remotes/apache/5.0
 
         if (!handled.contains(AfterRender.class))
             afterRenderPhase = cleanupRenderPhase;
@@ -794,6 +1231,11 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
 
     public void enqueueBeforeRenderBody(RenderQueue queue)
     {
+<<<<<<< HEAD
+=======
+        // If no body, then no beforeRenderBody or afterRenderBody
+
+>>>>>>> refs/remotes/apache/5.0
         if (bodyBlock != null)
             push(queue, beforeRenderBodyPhase);
     }
@@ -991,17 +1433,36 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
      */
     public final void render(MarkupWriter writer, RenderQueue queue)
     {
+<<<<<<< HEAD
         // TODO: An error if the render flag is already set (recursive rendering not
+=======
+        // We assume that by the time we start to render, the structure (i.e., mixins) is nailed down.
+        // We could add a lock, but that seems wasteful.
+
+        if (!renderPhasesInitalized)
+            initializeRenderPhases();
+
+        // TODO: An error if the _render flag is already set (recursive rendering not
+>>>>>>> refs/remotes/apache/5.0
         // allowed or advisable).
 
         // TODO: Check for recursive rendering.
 
         renderingValue.set(true);
 
+        // TODO: Check for recursive rendering.
+
+        rendering = true;
+
+<<<<<<< HEAD
+        queue.push(new PostRenderCleanupPhase(writer.getElement()));
+
+=======
         queue.startComponent(coreResources);
 
         queue.push(new PostRenderCleanupPhase(writer.getElement()));
 
+>>>>>>> refs/remotes/apache/5.0
         push(queue, setupRenderPhase);
     }
 
@@ -1234,6 +1695,7 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
     public Logger getEventLogger()
     {
         return eventLogger;
+<<<<<<< HEAD
     }
 
     public Link createEventLink(String eventType, Object... context)
@@ -1259,5 +1721,7 @@ public class ComponentPageElementImpl extends BaseLocatable implements Component
     public ComponentResourceSelector getResourceSelector()
     {
         return page.getSelector();
+=======
+>>>>>>> refs/remotes/apache/5.0
     }
 }

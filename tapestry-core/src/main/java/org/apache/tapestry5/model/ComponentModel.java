@@ -184,6 +184,7 @@ public interface ComponentModel
 
     /**
      * Returns a set of all the render phases that this model (including parent models) that are handled. Render phases
+<<<<<<< HEAD
      * are represented by the corresponding annotation ({@link BeginRender}, {@link AfterRender}, etc.).
      *
      * @return set of classes
@@ -219,4 +220,12 @@ public interface ComponentModel
      * @since 5.4
      */
     boolean handleActivationEventContext();
+=======
+     * are represented by the corresponding annotation ({@link org.apache.tapestry5.annotations.BeginRender}, {@link
+     * org.apache.tapestry5.annotations.AfterRender}, etc.).
+     *
+     * @return set of classes
+     */
+    Set<Class> getHandledRenderPhases();
+>>>>>>> refs/remotes/apache/5.0
 }

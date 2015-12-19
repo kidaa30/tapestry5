@@ -19,7 +19,10 @@ import org.apache.tapestry5.ioc.internal.util.InternalUtils;
 
 import java.io.PrintWriter;
 import java.util.Collections;
+<<<<<<< HEAD
 import java.util.List;
+=======
+>>>>>>> refs/remotes/apache/5.0
 import java.util.Map;
 
 /**
@@ -171,11 +174,18 @@ public final class Document extends Node
             dtd.toMarkup(writer);
         }
 
+<<<<<<< HEAD
         if (preamble != null)
         {
             for (Node n : preamble)
                 n.toMarkup(this, writer, namespaceURIToPrefix);
         }
+=======
+        Map<String, String> initialNamespaceMap = Collections.emptyMap();
+
+        rootElement.toMarkup(document, writer, initialNamespaceMap);
+    }
+>>>>>>> refs/remotes/apache/5.0
 
         if (rootElement == null)
             return;
@@ -216,6 +226,7 @@ public final class Document extends Node
         dtd = new DTD(name, publicId, systemId);
     }
 
+<<<<<<< HEAD
     /**
      * Returns true if the document has an explicit DTD (set via {@link #dtd(String, String, String)}).
      *
@@ -315,4 +326,13 @@ public final class Document extends Node
         return mimeType;
     }
     
+=======
+    @Override
+    protected Map<String, String> getNamespaceURIToPrefix()
+    {
+        if (rootElement == null) return Collections.emptyMap();
+
+        return rootElement.getNamespaceURIToPrefix();
+    }
+>>>>>>> refs/remotes/apache/5.0
 }

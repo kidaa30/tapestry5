@@ -15,8 +15,12 @@ package org.apache.tapestry5.internal.structure;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.func.Worker;
 import org.apache.tapestry5.internal.InternalComponentResources;
+<<<<<<< HEAD
 import org.apache.tapestry5.internal.bindings.InternalPropBinding;
 import org.apache.tapestry5.internal.bindings.PropBinding;
+=======
+import org.apache.tapestry5.internal.ParameterAccess;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.internal.services.Instantiator;
 import org.apache.tapestry5.internal.transform.ParameterConduit;
 import org.apache.tapestry5.internal.util.NamedSet;
@@ -72,6 +76,7 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
 
     private static final Object[] EMPTY = new Object[0];
 
+<<<<<<< HEAD
     private static final AnnotationProvider NULL_ANNOTATION_PROVIDER = new NullAnnotationProvider();
 
     // Map from parameter name to binding. This is mutable but not guarded by the lazy creation lock, as it is only
@@ -84,6 +89,14 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
     private NamedSet<ParameterConduit> conduits;
 
     // Guarded by: LockSupport
+=======
+    // Case insensitive map from parameter name to binding
+    private Map<String, Binding> bindings;
+
+    // Case insenstivie map from parameter name to ParameterAccess
+    private Map<String, ParameterAccess> access;
+
+>>>>>>> refs/remotes/apache/5.0
     private Messages messages;
 
     // Guarded by: LockSupport
@@ -144,6 +157,48 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
             value.reset();
         }
     };
+
+    private boolean informalsComputed;
+
+    /**
+     * We keep a linked list of informal parameters, which saves us the expense of determining which bindings are formal
+     * and which are informal. Each Informal points to the next.
+     */
+    private class Informal
+    {
+        private final String name;
+
+        private final Binding binding;
+
+        final Informal next;
+
+        private Informal(String name, Binding binding, Informal next)
+        {
+            this.name = name;
+            this.binding = binding;
+            this.next = next;
+        }
+
+        void write(MarkupWriter writer)
+        {
+            Object value = binding.get();
+
+            if (value == null) return;
+
+            if (value instanceof Block) return;
+
+            // If it's already a String, don't use the TypeCoercer (renderInformalParameters is
+            // a CPU hotspot, as is TypeCoercer.coerce).
+
+            String valueString = value instanceof String
+                                 ? (String) value
+                                 : pageResources.coerce(value, String.class);
+
+            writer.attributes(name, valueString);
+        }
+    }
+
+    private Informal firstInformal;
 
     public InternalComponentResourcesImpl(Page page, ComponentPageElement element,
                                           ComponentResources containerResources, ComponentPageElementResources elementResources, String completeId,
@@ -229,11 +284,15 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
 
     public <T> T getInformalParameter(String name, Class<T> type)
     {
+<<<<<<< HEAD
         Binding binding = getBinding(name);
 
         Object value = binding == null ? null : binding.get();
 
         return elementResources.coerce(value, type);
+=======
+        return getParameterAccess(name).read(type);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     public Block getBody()
@@ -263,9 +322,13 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
 
     public <T extends Annotation> T getParameterAnnotation(String parameterName, Class<T> annotationType)
     {
+<<<<<<< HEAD
         Binding binding = getBinding(parameterName);
 
         return binding == null ? null : binding.getAnnotation(annotationType);
+=======
+        return getParameterAccess(parameterName).getAnnotation(annotationType);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     public boolean isRendering()
@@ -323,6 +386,7 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
         bindings.put(parameterName, binding);
     }
 
+<<<<<<< HEAD
     public Class getBoundType(String parameterName)
     {
         Binding binding = getBinding(parameterName);
@@ -340,19 +404,33 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
             genericType = binding.getBindingType();
         }
         return genericType;
+=======
+
+    public Class getBoundType(String parameterName)
+    {
+        return getParameterAccess(parameterName).getBoundType();
+>>>>>>> refs/remotes/apache/5.0
     }
     
 
     public Binding getBinding(String parameterName)
     {
+<<<<<<< HEAD
         return NamedSet.get(bindings, parameterName);
+=======
+        return InternalUtils.get(bindings, parameterName);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     public AnnotationProvider getAnnotationProvider(String parameterName)
     {
+<<<<<<< HEAD
         Binding binding = getBinding(parameterName);
 
         return binding == null ? NULL_ANNOTATION_PROVIDER : binding;
+=======
+        return getParameterAccess(parameterName);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     public Logger getLogger()
@@ -370,6 +448,7 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
         if (bindings == null)
             return;
 
+<<<<<<< HEAD
         for (Informal i = firstInformal(); i != null; i = i.next)
             i.write(writer);
     }
@@ -410,7 +489,20 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
         } finally
         {
             downgradeWriteLockToReadLock();
+=======
+        if (!informalsComputed)
+        {
+            for (Map.Entry<String, Binding> e : getInformalParameterBindings().entrySet())
+            {
+                firstInformal = new Informal(e.getKey(), e.getValue(), firstInformal);
+            }
+
+            informalsComputed = true;
+>>>>>>> refs/remotes/apache/5.0
         }
+
+        for (Informal i = firstInformal; i != null; i = i.next)
+            i.write(writer);
     }
 
     public Component getContainer()
@@ -550,6 +642,7 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
     {
         Map<String, Object> variablesMap = getRenderVariables(false);
 
+<<<<<<< HEAD
         Object result = InternalUtils.get(variablesMap, name);
 
         if (result == null)
@@ -557,6 +650,12 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
             throw new IllegalArgumentException(StructureMessages.missingRenderVariable(getCompleteId(), name,
                     variablesMap == null ? null : variablesMap.keySet()));
         }
+=======
+        if (result == null)
+            throw new IllegalArgumentException(StructureMessages.missingRenderVariable(getCompleteId(),
+                                                                                       name,
+                                                                                       renderVariables == null ? null : renderVariables.keySet()));
+>>>>>>> refs/remotes/apache/5.0
 
         return result;
     }
@@ -586,6 +685,7 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
         page.addLifecycleListener(listener);
     }
 
+<<<<<<< HEAD
     public void removePageLifecycleListener(PageLifecycleListener listener)
     {
         page.removeLifecycleListener(listener);
@@ -692,5 +792,110 @@ public class InternalComponentResourcesImpl extends LockSupport implements Inter
     public PageLifecycleCallbackHub getPageLifecycleCallbackHub()
     {
         return page;
+=======
+    public ParameterAccess getParameterAccess(final String parameterName)
+    {
+        if (access == null) access = CollectionFactory.newCaseInsensitiveMap();
+
+        ParameterAccess result = access.get(parameterName);
+
+        if (result == null)
+        {
+            result = createParameterAccess(parameterName);
+            access.put(parameterName, result);
+        }
+
+        return result;
+    }
+
+    private ParameterAccess createParameterAccess(final String parameterName)
+    {
+        final Binding binding = getBinding(parameterName);
+
+        ParameterModel parameterModel = getComponentModel().getParameterModel(parameterName);
+
+        final boolean allowNull = parameterModel == null ? true : parameterModel.isAllowNull();
+
+        return new ParameterAccess()
+        {
+            public boolean isBound()
+            {
+                return binding != null;
+            }
+
+            public Object read(String desiredTypeName)
+            {
+                Class desiredType = pageResources.toClass(desiredTypeName);
+
+                return read(desiredType);
+            }
+
+            public <T> T read(Class<T> desiredType)
+            {
+                if (binding == null) return null;
+
+                T result;
+
+                try
+                {
+                    // Will throw NPE if binding is null, but this should never be called if the
+                    // parameter is not bound.
+
+                    Object boundValue = binding.get();
+
+                    result = pageResources.coerce(boundValue, desiredType);
+                }
+                catch (Exception ex)
+                {
+                    throw new TapestryException(
+                            StructureMessages.getParameterFailure(parameterName, getCompleteId(), ex), binding,
+                            ex);
+                }
+
+                if (result == null && !allowNull)
+                    throw new TapestryException(String.format(
+                            "Parameter '%s' of component %s is bound to null. This parameter is not allowed to be null.",
+                            parameterName,
+                            getCompleteId()), binding, null);
+
+                return result;
+            }
+
+            public <T> void write(T parameterValue)
+            {
+                if (binding == null) return;
+
+                Class bindingType = binding.getBindingType();
+
+                try
+                {
+                    Object coerced = pageResources.coerce(parameterValue, bindingType);
+
+                    binding.set(coerced);
+                }
+                catch (Exception ex)
+                {
+                    throw new TapestryException(
+                            StructureMessages.writeParameterFailure(parameterName, getCompleteId(), ex), binding,
+                            ex);
+                }
+            }
+
+            public boolean isInvariant()
+            {
+                return binding != null && binding.isInvariant();
+            }
+
+            public Class getBoundType()
+            {
+                return binding == null ? null : binding.getBindingType();
+            }
+
+            public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
+            {
+                return binding == null ? null : binding.getAnnotation(annotationClass);
+            }
+        };
+>>>>>>> refs/remotes/apache/5.0
     }
 }

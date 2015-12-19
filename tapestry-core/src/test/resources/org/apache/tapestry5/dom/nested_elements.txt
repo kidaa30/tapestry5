@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 <population><person last-name="Flintstone" first-name="Fred"></person><person last-name="Rubble" first-name="Barney"></person></population>
+=======
+<population><person first-name="Fred" last-name="Flintstone"></person><person first-name="Barney" last-name="Rubble"></person></population>
+>>>>>>> refs/remotes/apache/5.0

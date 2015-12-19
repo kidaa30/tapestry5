@@ -18,6 +18,11 @@ import org.apache.tapestry5.Binding;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.internal.parser.AttributeToken;
 import org.apache.tapestry5.internal.parser.ExpansionToken;
+<<<<<<< HEAD
+=======
+import org.apache.tapestry5.internal.structure.ComponentPageElement;
+import org.apache.tapestry5.internal.structure.Page;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.ioc.Location;
 import org.apache.tapestry5.runtime.RenderCommand;
 import org.apache.tapestry5.services.BindingSource;
@@ -28,6 +33,22 @@ import org.apache.tapestry5.services.BindingSource;
  */
 public interface PageElementFactory
 {
+<<<<<<< HEAD
+=======
+    RenderCommand newAttributeElement(ComponentResources componentResources, AttributeToken token);
+
+    RenderCommand newExpansionElement(ComponentResources componentResources, ExpansionToken token);
+
+    /**
+     * Creates a new binding as with {@link BindingSource#newBinding(String, ComponentResources, ComponentResources,
+     * String, String, Location)}. However, if the binding contains an expansion (i.e., <code>${...}</code>), then a
+     * binding that returns the fully expanded expression will be returned.
+     */
+    Binding newBinding(String parameterName, ComponentResources loadingComponentResources,
+                       ComponentResources embeddedComponentResources, String defaultBindingPrefix, String expression,
+                       Location location);
+
+>>>>>>> refs/remotes/apache/5.0
     /**
      * Creates a RenderCommand for rendering an attribute, when the attribute contains expansions.
      *

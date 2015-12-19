@@ -24,6 +24,12 @@ import org.apache.tapestry5.services.MarkupWriterFactory;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.services.Response;
 import org.slf4j.Logger;
+<<<<<<< HEAD
+=======
+
+import java.io.IOException;
+import java.io.PrintWriter;
+>>>>>>> refs/remotes/apache/5.0
 
 public class PageResponseRendererImpl implements PageResponseRenderer
 {
@@ -39,9 +45,14 @@ public class PageResponseRendererImpl implements PageResponseRenderer
 
     private final Logger logger;
 
+<<<<<<< HEAD
     public PageResponseRendererImpl(RequestGlobals requestGlobals, MarkupWriterFactory markupWriterFactory,
             PageMarkupRenderer markupRenderer, PageContentTypeAnalyzer pageContentTypeAnalyzer, Response response,
             Logger logger)
+=======
+    public PageResponseRendererImpl(MarkupWriterFactory markupWriterFactory, PageMarkupRenderer markupRenderer,
+                                    PageContentTypeAnalyzer pageContentTypeAnalyzer, Response response, Logger logger)
+>>>>>>> refs/remotes/apache/5.0
     {
         this.requestGlobals = requestGlobals;
         this.markupWriterFactory = markupWriterFactory;
@@ -64,6 +75,7 @@ public class PageResponseRendererImpl implements PageResponseRenderer
         markupRenderer.renderPageMarkup(page, writer);
 
         PrintWriter pw = response.getPrintWriter(contentType.toString());
+<<<<<<< HEAD
         long startNanos = -1l;
         boolean debugEnabled = logger.isDebugEnabled();
         if (debugEnabled)
@@ -83,5 +95,24 @@ public class PageResponseRendererImpl implements PageResponseRenderer
         }
 
         pw.close();
+=======
+
+        long startNanos = System.nanoTime();
+
+        writer.toMarkup(pw);
+
+        long endNanos = System.nanoTime();
+
+        if (logger.isDebugEnabled())
+        {
+            long elapsedNanos = endNanos - startNanos;
+            double elapsedSeconds = ((float) elapsedNanos) / 1000000000F;
+
+            logger.debug(String.format("Response DOM streamed to markup in %.3f seconds",
+                                       elapsedSeconds));
+        }
+
+        pw.flush();
+>>>>>>> refs/remotes/apache/5.0
     }
 }

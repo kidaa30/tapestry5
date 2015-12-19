@@ -57,6 +57,7 @@ public interface InternalComponentResources extends ComponentResources,
 
     /**
      * Allows the resources to cleanup any render-time only data.
+<<<<<<< HEAD
      */
     void postRenderCleanup();
 
@@ -83,6 +84,8 @@ public interface InternalComponentResources extends ComponentResources,
      * method.
      * 
      * @since 5.2.0
+=======
+>>>>>>> refs/remotes/apache/5.0
      */
     void setParameterConduit(String parameterName, ParameterConduit conduit);
     
@@ -95,5 +98,17 @@ public interface InternalComponentResources extends ComponentResources,
      * 
      * @since 5.2.0
      */
+<<<<<<< HEAD
     String getPropertyName(String parameterName);
+=======
+    void queueRender(RenderQueue queue);
+
+    /**
+     * Gets access object for the parameter.
+     *
+     * @param parameterName
+     * @return object used to read and update the parameter
+     */
+    ParameterAccess getParameterAccess(String parameterName);
+>>>>>>> refs/remotes/apache/5.0
 }

@@ -41,7 +41,12 @@ public class RenderQueueImpl implements RenderQueue
 
     public void push(RenderCommand command)
     {
+<<<<<<< HEAD
         assert command != null;
+=======
+        Defense.notNull(command, "command");
+
+>>>>>>> refs/remotes/apache/5.0
         queue.push(command);
     }
 

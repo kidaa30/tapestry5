@@ -16,6 +16,10 @@ import org.apache.tapestry5.func.Predicate;
 import org.apache.tapestry5.internal.TapestryInternalUtils;
 import org.apache.tapestry5.internal.util.PrintOutCollector;
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
+<<<<<<< HEAD
+=======
+import org.apache.tapestry5.ioc.internal.util.Defense;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.ioc.internal.util.InternalUtils;
 import org.apache.tapestry5.ioc.util.Stack;
 
@@ -112,9 +116,19 @@ public final class Element extends Node
      */
     public Element attribute(String namespace, String name, String value)
     {
+<<<<<<< HEAD
         assert InternalUtils.isNonBlank(name);
 
         updateAttribute(namespace, name, value, false);
+=======
+        Defense.notBlank(name, "name");
+
+        if (value == null) return this;
+
+        if (attributes == null) attributes = CollectionFactory.newMap();
+
+        if (!attributes.containsKey(name)) attributes.put(name, new Attribute(namespace, name, value));
+>>>>>>> refs/remotes/apache/5.0
 
         return this;
     }
@@ -208,8 +222,12 @@ public final class Element extends Node
      */
     public Element forceAttributes(String... namesAndValues)
     {
+<<<<<<< HEAD
         return forceAttributesNS(null, namesAndValues);
     }
+=======
+        if (attributes == null) attributes = CollectionFactory.newMap();
+>>>>>>> refs/remotes/apache/5.0
 
     /**
      * Forces changes to a number of attributes in the global namespace. The new attributes <em>overwrite</em> previous
@@ -247,7 +265,12 @@ public final class Element extends Node
      */
     public Element element(String name, String... namesAndValues)
     {
+<<<<<<< HEAD
         assert InternalUtils.isNonBlank(name);
+=======
+        Defense.notBlank(name, "name");
+
+>>>>>>> refs/remotes/apache/5.0
         Element child = newChild(new Element(this, null, name));
 
         child.attributes(namesAndValues);
@@ -288,7 +311,12 @@ public final class Element extends Node
      */
     public Element elementNS(String namespace, String name)
     {
+<<<<<<< HEAD
         assert InternalUtils.isNonBlank(name);
+=======
+        Defense.notBlank(name, "name");
+
+>>>>>>> refs/remotes/apache/5.0
         return newChild(new Element(this, namespace, name));
     }
 
@@ -305,7 +333,12 @@ public final class Element extends Node
      */
     public Element elementAt(int index, String name, String... namesAndValues)
     {
+<<<<<<< HEAD
         assert InternalUtils.isNonBlank(name);
+=======
+        Defense.notBlank(name, "name");
+
+>>>>>>> refs/remotes/apache/5.0
         Element child = new Element(this, null, name);
         child.attributes(namesAndValues);
 
@@ -384,7 +417,13 @@ public final class Element extends Node
 
         for (Attribute attr = firstAttribute; attr != null; attr = attr.nextAttribute)
         {
+<<<<<<< HEAD
             attr.render(markupModel, builder, localNamespacePrefixToURI);
+=======
+            Attribute attribute = attributes.get(key);
+
+            attribute.render(markupModel, builder, localNamespacePrefixToURI);
+>>>>>>> refs/remotes/apache/5.0
         }
 
         // Next, emit namespace declarations for each namespace.
@@ -423,9 +462,19 @@ public final class Element extends Node
 
         writer.print(builder.toString());
 
+<<<<<<< HEAD
         if (hasChildren)
             writeChildMarkup(document, writer, localNamespacePrefixToURI);
 
+=======
+        if (hasChildren) writeChildMarkup(document, writer, localNamespacePrefixToURI);
+
+        // Dangerous -- perhaps it should be an error for a tag of type OMIT to even have children!
+        // We'll certainly be writing out unbalanced markup in that case.
+
+        if (style == EndTagStyle.OMIT) return;
+
+>>>>>>> refs/remotes/apache/5.0
         if (hasChildren || style == EndTagStyle.REQUIRE)
         {
             // TAP5-471: Avoid use of printf().
@@ -473,6 +522,7 @@ public final class Element extends Node
         return getElementByAttributeValue("id", id);
     }
 
+<<<<<<< HEAD
     /**
      * Tries to find an element under this element (including itself) whose given attribute has a given value.
      *
@@ -508,6 +558,8 @@ public final class Element extends Node
      */
     public Element getElement(Predicate<Element> predicate)
     {
+=======
+>>>>>>> refs/remotes/apache/5.0
         LinkedList<Element> queue = CollectionFactory.newLinkedList();
 
         queue.add(this);
@@ -536,7 +588,12 @@ public final class Element extends Node
      */
     public Element find(String path)
     {
+<<<<<<< HEAD
         assert InternalUtils.isNonBlank(path);
+=======
+        Defense.notBlank(path, "path");
+
+>>>>>>> refs/remotes/apache/5.0
         Element search = this;
 
         for (String name : TapestryInternalUtils.splitPath(path))
@@ -722,8 +779,14 @@ public final class Element extends Node
     private Map<String, String> createNamespaceURIToPrefix(Map<String, String> containerNamespaceURIToPrefix)
     {
         MapHolder holder = new MapHolder(containerNamespaceURIToPrefix);
+<<<<<<< HEAD
 
         holder.putAll(namespaceToPrefix);
+=======
+
+        holder.putAll(namespaceToPrefix);
+
+>>>>>>> refs/remotes/apache/5.0
 
         // result now contains all the mappings, including this element's.
 
@@ -743,8 +806,16 @@ public final class Element extends Node
 
         // And for any attributes that have a namespace.
 
+<<<<<<< HEAD
         for (Attribute attr = firstAttribute; attr != null; attr = attr.nextAttribute)
             addMappingIfNeeded(holder, attr.getNamespace());
+=======
+        if (attributes != null)
+        {
+            for (Attribute a : attributes.values())
+                addMappingIfNeeded(holder, a.namespace);
+        }
+>>>>>>> refs/remotes/apache/5.0
 
         return holder.getResult();
     }
@@ -756,8 +827,14 @@ public final class Element extends Node
 
         Map<String, String> current = holder.getResult();
 
+<<<<<<< HEAD
         if (current.containsKey(namespace))
             return;
+=======
+        Map<String, String> current = holder.getResult();
+
+        if (current.containsKey(namespace)) return;
+>>>>>>> refs/remotes/apache/5.0
 
         // A missing namespace.
 
@@ -783,6 +860,7 @@ public final class Element extends Node
 
     @Override
     protected Map<String, String> getNamespaceURIToPrefix()
+<<<<<<< HEAD
     {
         MapHolder holder = new MapHolder();
 
@@ -945,6 +1023,12 @@ public final class Element extends Node
         PrintOutCollector collector = new PrintOutCollector();
 
         writeChildMarkup(getDocument(), collector.getPrintWriter(), null);
+=======
+    {
+        MapHolder holder = new MapHolder();
+
+        List<Element> elements = CollectionFactory.newList(this);
+>>>>>>> refs/remotes/apache/5.0
 
         return collector.getPrintOut();
     }
@@ -963,6 +1047,7 @@ public final class Element extends Node
 
         while (cursor != null)
         {
+<<<<<<< HEAD
             result.add(cursor);
             cursor = cursor.nextSibling;
         }
@@ -1061,7 +1146,19 @@ public final class Element extends Node
         {
             result.add(a);
         }
+=======
+            elements.add(cursor);
+            cursor = cursor.parent;
+        }
 
-        return result;
+        // Reverse the list, so that later elements will overwrite earlier ones.
+
+        Collections.reverse(elements);
+
+        for (Element e : elements)
+            holder.putAll(e.namespaceToPrefix);
+>>>>>>> refs/remotes/apache/5.0
+
+        return holder.getResult();
     }
 }

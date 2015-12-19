@@ -83,5 +83,21 @@ public interface Environment
      * @deprecated Deprecated in 5.4 with no replacement; not longer used by Tapestry.
      * @see org.apache.tapestry5.TapestryConstants#RESPONSE_RENDERER
      */
+<<<<<<< HEAD
     void decloak();
+=======
+    void clear();
+
+    /**
+     * For some type, returns a temporary access object for the type. The access object is efficient because it ties
+     * directly to the thread's instance of the Environment service, it also caches the current value. <p>The access
+     * object must be discarded at the end of the request (it will be unusable at that point anyway).
+     *
+     * @param type type of environmental object
+     * @param <T>
+     * @return access object that can be used to see the current environmental object of the type
+     * @since 5.0.19
+     */
+    <T> EnvironmentalAccess<T> getAccess(Class<T> type);
+>>>>>>> refs/remotes/apache/5.0
 }

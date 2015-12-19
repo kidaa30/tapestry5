@@ -134,10 +134,16 @@ public class LinkImpl implements Link
         return this;
     }
 
+<<<<<<< HEAD
     public String toAbsoluteURI()
     {
         return buildAnchoredURI(defaultSecurity.promote());
     }
+=======
+        if (invocationURI.length() > 0 || contextPath.length() == 0)
+        {
+            builder.append("/");
+>>>>>>> refs/remotes/apache/5.0
 
     public String toAbsoluteURI(boolean secure)
     {

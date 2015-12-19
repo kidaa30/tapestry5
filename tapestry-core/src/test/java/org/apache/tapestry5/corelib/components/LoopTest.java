@@ -65,7 +65,11 @@ public class LoopTest extends InternalBaseTestCase
         assertEquals(loop.getValue(), "gamma");
         assertEquals(loop.getIndex(), 2);
 
+<<<<<<< HEAD
         assertNull(loop.after(writer));
+=======
+        assertTrue(loop.after(writer));
+>>>>>>> refs/remotes/apache/5.0
 
         verify();
     }

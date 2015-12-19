@@ -34,8 +34,11 @@ public class EventImpl implements Event
 
     private final boolean debugEnabled;
 
+<<<<<<< HEAD
     protected final OperationTracker tracker;
 
+=======
+>>>>>>> refs/remotes/apache/5.0
     /**
      * @param handler informed of return values from methods, deems when the event is aborted
      * @param logger  used to log method invocations
@@ -74,6 +77,7 @@ public class EventImpl implements Event
         // let's check anyway.
 
         if (aborted)
+<<<<<<< HEAD
         {
             throw new IllegalStateException(String.format("Can not store result from invoking method %s, because an event result value has already been obtained from some other event handler method.", methodDescription));
         }
@@ -92,6 +96,13 @@ public class EventImpl implements Event
 
             aborted |= handleResult;
         }
+=======
+            throw new IllegalStateException(ServicesMessages.componentEventIsAborted(methodDescription));
+
+
+        if (result != null)
+            aborted |= handler.handleResult(result);
+>>>>>>> refs/remotes/apache/5.0
 
         return aborted;
     }
@@ -99,5 +110,11 @@ public class EventImpl implements Event
     protected String getMethodDescription()
     {
         return methodDescription;
+    }
+
+    public void reset()
+    {
+        aborted = false;
+        methodDescription = null;
     }
 }

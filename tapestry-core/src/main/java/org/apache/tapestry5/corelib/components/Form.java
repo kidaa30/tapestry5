@@ -48,6 +48,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 /**
+<<<<<<< HEAD
  * An HTML form, which will enclose other components to render out the various
  * types of fields.
  *
@@ -73,6 +74,23 @@ import java.net.URLDecoder;
  * that care only about form submission, regardless of success or failure.
  *
  * For all of these notifications, the event context is derived from the <strong>context</strong> component parameter. This
+=======
+ * An HTML form, which will enclose other components to render out the various types of fields.
+ * <p/>
+ * A Form emits many notification events. When it renders, it fires a {@link org.apache.tapestry5.EventConstants#PREPARE_FOR_RENDER}
+ * notification, followed by a {@link org.apache.tapestry5.EventConstants#PREPARE} notification.
+ * <p/>
+ * When the form is submitted, the component emits several notifications: first a {@link
+ * org.apache.tapestry5.EventConstants#PREPARE_FOR_SUBMIT}, then a {@link org.apache.tapestry5.EventConstants#PREPARE}:
+ * these allow the page to update its state as necessary to prepare for the form submission, then (after components
+ * enclosed by the form have operated), a {@link org.apache.tapestry5.EventConstants#VALIDATE_FORM} event is emitted, to
+ * allow for cross-form validation. After that, either a {@link org.apache.tapestry5.EventConstants#SUCCESS} OR {@link
+ * org.apache.tapestry5.EventConstants#FAILURE} event (depending on whether the {@link ValidationTracker} has recorded
+ * any errors). Lastly, a {@link org.apache.tapestry5.EventConstants#SUBMIT} event, for any listeners that care only
+ * about form submission, regardless of success or failure.
+ * <p/>
+ * For all of these notifications, the event context is derived from the <strong>context</strong> parameter. This
+>>>>>>> refs/remotes/apache/5.0
  * context is encoded into the form's action URI (the parameter is not read when the form is submitted, instead the
  * values encoded into the form are used).
  *

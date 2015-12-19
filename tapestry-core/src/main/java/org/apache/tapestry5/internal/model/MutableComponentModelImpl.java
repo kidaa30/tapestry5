@@ -65,12 +65,15 @@ public final class MutableComponentModelImpl implements MutableComponentModel
 
     private Set<Class> handledRenderPhases;
 
+<<<<<<< HEAD
     private Map<String, Boolean> handledEvents;
 
     private final String libraryName;
 
     private boolean handleActivationEventContext;
 
+=======
+>>>>>>> refs/remotes/apache/5.0
     public MutableComponentModelImpl(String componentClassName, Logger logger, Resource baseResource,
                                      ComponentModel parentModel, boolean pageClass, String libraryName)
     {
@@ -339,6 +342,7 @@ public final class MutableComponentModelImpl implements MutableComponentModel
 
     public void addRenderPhase(Class renderPhase)
     {
+<<<<<<< HEAD
         assert renderPhase != null;
         if (handledRenderPhases == null)
             handledRenderPhases = CollectionFactory.newSet();
@@ -352,6 +356,13 @@ public final class MutableComponentModelImpl implements MutableComponentModel
             handledEvents = CollectionFactory.newCaseInsensitiveMap();
 
         handledEvents.put(eventType, true);
+=======
+        Defense.notNull(renderPhase, "renderPhase");
+
+        if (handledRenderPhases == null) handledRenderPhases = CollectionFactory.newSet();
+
+        handledRenderPhases.add(renderPhase);
+>>>>>>> refs/remotes/apache/5.0
     }
 
     public String getMeta(String key)
@@ -377,6 +388,7 @@ public final class MutableComponentModelImpl implements MutableComponentModel
         return result;
     }
 
+<<<<<<< HEAD
     public boolean handlesEvent(String eventType)
     {
         if (InternalUtils.get(handledEvents, eventType) != null)
@@ -408,5 +420,18 @@ public final class MutableComponentModelImpl implements MutableComponentModel
     public boolean handleActivationEventContext()
     {
         return this.handleActivationEventContext;
+=======
+    public Set<Class> getHandledRenderPhases()
+    {
+        Set<Class> result = CollectionFactory.newSet();
+
+        if (parentModel != null)
+            result.addAll(parentModel.getHandledRenderPhases());
+
+        if (handledRenderPhases != null)
+            result.addAll(handledRenderPhases);
+
+        return result;
+>>>>>>> refs/remotes/apache/5.0
     }
 }

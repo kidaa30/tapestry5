@@ -56,7 +56,10 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         ComponentEventCallback handler = mockComponentEventHandler();
         EventContext context = mockEventContext();
         Logger logger = mockLogger();
+<<<<<<< HEAD
         ComponentModel model = mockComponentModel();
+=======
+>>>>>>> refs/remotes/apache/5.0
 
         train_isDebugEnabled(logger, false);
 
@@ -64,7 +67,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, false, model, logger);
+=======
+        ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, logger);
+>>>>>>> refs/remotes/apache/5.0
 
         assertTrue(event.matches("eventType", "someId", 0));
         assertFalse(event.matches("foo", "someId", 0));
@@ -107,7 +114,10 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         ComponentEventCallback handler = mockComponentEventHandler();
         EventContext context = mockEventContext();
         Logger logger = mockLogger();
+<<<<<<< HEAD
         ComponentModel model = mockComponentModel();
+=======
+>>>>>>> refs/remotes/apache/5.0
 
         train_isDebugEnabled(logger, false);
 
@@ -115,7 +125,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, false, model, logger);
+=======
+        ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, logger);
+>>>>>>> refs/remotes/apache/5.0
 
         assertTrue(event.matches("EVENTTYPE", "someid", 0));
 
@@ -128,7 +142,10 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         ComponentEventCallback handler = mockComponentEventHandler();
         EventContext context = mockEventContext();
         Logger logger = mockLogger();
+<<<<<<< HEAD
         ComponentModel model = mockComponentModel();
+=======
+>>>>>>> refs/remotes/apache/5.0
 
         train_isDebugEnabled(logger, false);
 
@@ -136,7 +153,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, false, model, logger);
+=======
+        ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, logger);
+>>>>>>> refs/remotes/apache/5.0
 
         assertTrue(event.matches("eventType", "someId", 0));
 
@@ -151,7 +172,10 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         ComponentEventCallback handler = mockComponentEventHandler();
         EventContext context = mockEventContext();
         Logger logger = mockLogger();
+<<<<<<< HEAD
         ComponentModel model = mockComponentModel();
+=======
+>>>>>>> refs/remotes/apache/5.0
 
         train_isDebugEnabled(logger, false);
 
@@ -159,7 +183,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, false, model, logger);
+=======
+        ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, null, logger);
+>>>>>>> refs/remotes/apache/5.0
 
         assertTrue(event.matches("eventtype", "SOMEID", 0));
 
@@ -175,8 +203,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         Integer value = new Integer(27);
         Logger logger = mockLogger();
 
+<<<<<<< HEAD
         ComponentModel model = mockComponentModel();
 
+=======
+>>>>>>> refs/remotes/apache/5.0
         train_isDebugEnabled(logger, false);
 
         train_toClass(resources, "java.lang.Integer", Integer.class);
@@ -186,7 +217,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
 
         replay();
 
+<<<<<<< HEAD
         ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, resources, false, model, logger);
+=======
+        ComponentEvent event = new ComponentEventImpl("eventType", "someId", context, handler, resources, logger);
+>>>>>>> refs/remotes/apache/5.0
 
         assertSame(event.coerceContext(0, "java.lang.Integer"), value);
 
@@ -200,8 +235,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         EventContext context = mockEventContext();
         Logger logger = mockLogger();
 
+<<<<<<< HEAD
         ComponentModel model = mockComponentModel();
 
+=======
+>>>>>>> refs/remotes/apache/5.0
         train_isDebugEnabled(logger, true);
         logger.debug(eq(TapestryMarkers.EVENT_HANDLER_METHOD), isA(String.class));
 
@@ -275,8 +313,11 @@ public class ComponentEventImplTest extends InternalBaseTestCase
         train_isDebugEnabled(logger, true);
         EasyMock.expectLastCall().atLeastOnce();
 
+<<<<<<< HEAD
         ComponentPageElementResources resources = mockResources();
 
+=======
+>>>>>>> refs/remotes/apache/5.0
         logger.debug(eq(TapestryMarkers.EVENT_HANDLER_METHOD), isA(String.class));
 
         ComponentEventCallback handler = mockComponentEventHandler();

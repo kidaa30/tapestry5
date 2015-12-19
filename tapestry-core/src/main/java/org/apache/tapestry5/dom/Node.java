@@ -15,9 +15,15 @@
 package org.apache.tapestry5.dom;
 
 import java.io.PrintWriter;
+<<<<<<< HEAD
 import java.util.Map;
 
 import org.apache.tapestry5.internal.util.PrintOutCollector;
+=======
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+>>>>>>> refs/remotes/apache/5.0
 
 /**
  * A node within the DOM.
@@ -56,6 +62,64 @@ public abstract class Node
         return container.getDocument();
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Returns the node as an {@link org.apache.tapestry5.dom.Element}, if it is an element. Returns null otherwise.
+     */
+    Element asElement()
+    {
+        return null;
+    }
+
+    void addChild(Node child)
+    {
+        ensureChildren();
+
+        children.add(child);
+
+        child.container = this;
+    }
+
+    private void ensureChildren()
+    {
+        if (children == null) children = CollectionFactory.newList();
+    }
+
+    void insertChildAt(int index, Node child)
+    {
+        ensureChildren();
+
+        children.add(index, child);
+
+        child.container = this;
+    }
+
+    boolean hasChildren()
+    {
+        return children != null && !children.isEmpty();
+    }
+
+    void writeChildMarkup(Document document, PrintWriter writer, Map<String, String> namespaceURIToPrefix)
+    {
+        if (children == null) return;
+
+        for (Node child : children)
+            child.toMarkup(document, writer, namespaceURIToPrefix);
+    }
+
+    /**
+     * @return the concatenation of the String representations {@link #toString()} of its children.
+     */
+    public final String getChildMarkup()
+    {
+        PrintOutCollector collector = new PrintOutCollector();
+
+        writeChildMarkup(getDocument(), collector.getPrintWriter(), null);
+
+        return collector.getPrintOut();
+    }
+>>>>>>> refs/remotes/apache/5.0
 
     /**
      * Invokes {@link #toMarkup(PrintWriter)}, collecting output in a string, which is returned.

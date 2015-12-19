@@ -14,6 +14,7 @@
 
 package org.apache.tapestry5.internal.services;
 
+<<<<<<< HEAD
 import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.func.Mapper;
 import org.apache.tapestry5.func.Predicate;
@@ -21,7 +22,13 @@ import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.apache.tapestry5.ioc.internal.util.OneShotLock;
 import org.apache.tapestry5.ioc.util.AvailableValues;
 import org.apache.tapestry5.ioc.util.UnknownValueException;
+=======
+import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
+import org.apache.tapestry5.ioc.internal.util.OneShotLock;
+import org.apache.tapestry5.ioc.services.ThreadCleanupListener;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.services.Environment;
+import org.apache.tapestry5.services.EnvironmentalAccess;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,13 +38,23 @@ import java.util.Map.Entry;
 /**
  * A non-threadsafe implementation (expects to use the "perthread" service lifecyle).
  */
+<<<<<<< HEAD
 public class EnvironmentImpl implements Environment
+=======
+public class EnvironmentImpl implements Environment, ThreadCleanupListener
+>>>>>>> refs/remotes/apache/5.0
 {
 
     // My generics mojo breaks down when we talk about the key and the value being related
     // types.
 
+<<<<<<< HEAD
     private Map<Class, LinkedList> typeToStack = CollectionFactory.newMap();
+=======
+    private final Map<Class, LinkedList> typeToStack = CollectionFactory.newMap();
+
+    private final Map<Class, EnvironmentalAccessImpl> typeToAccess = CollectionFactory.newMap();
+>>>>>>> refs/remotes/apache/5.0
 
     private final OneShotLock lock = new OneShotLock();
 
@@ -103,6 +120,8 @@ public class EnvironmentImpl implements Environment
     {
         LinkedList<T> stack = stackFor(type);
 
+        invalidate(type);
+
         return stack.removeFirst();
     }
 
@@ -113,6 +132,8 @@ public class EnvironmentImpl implements Environment
         T result = stack.isEmpty() ? null : stack.getFirst();
 
         stack.addFirst(instance);
+
+        invalidate(type);
 
         return result;
     }
@@ -129,6 +150,44 @@ public class EnvironmentImpl implements Environment
 
     public void decloak()
     {
+<<<<<<< HEAD
         throw new UnsupportedOperationException("decloak() is no longer available in Tapestry 5.4.");
+=======
+        lock.check();
+
+        typeToStack.clear();
+
+        for (EnvironmentalAccessImpl closure : typeToAccess.values())
+        {
+            closure.invalidate();
+        }
+    }
+
+    public <T> EnvironmentalAccess<T> getAccess(Class<T> type)
+    {
+        lock.check();
+
+        EnvironmentalAccessImpl access = typeToAccess.get(type);
+
+        if (access == null)
+        {
+            access = new EnvironmentalAccessImpl(this, type);
+            typeToAccess.put(type, access);
+        }
+
+        return access;
+    }
+
+    public void threadDidCleanup()
+    {
+        lock.lock();
+    }
+
+    void invalidate(Class type)
+    {
+        EnvironmentalAccessImpl access = typeToAccess.get(type);
+
+        if (access != null) access.invalidate();
+>>>>>>> refs/remotes/apache/5.0
     }
 }

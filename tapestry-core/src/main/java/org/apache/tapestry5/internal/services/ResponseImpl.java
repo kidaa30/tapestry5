@@ -14,6 +14,7 @@
 
 package org.apache.tapestry5.internal.services;
 
+<<<<<<< HEAD
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,6 +29,15 @@ import org.apache.tapestry5.Link;
 import org.apache.tapestry5.internal.InternalConstants;
 import org.apache.tapestry5.ioc.internal.util.InternalUtils;
 import org.apache.tapestry5.services.Response;
+=======
+import org.apache.tapestry5.Link;
+import org.apache.tapestry5.ioc.internal.util.Defense;
+import static org.apache.tapestry5.ioc.internal.util.Defense.notBlank;
+import org.apache.tapestry5.services.Response;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+>>>>>>> refs/remotes/apache/5.0
 
 /**
  * Implementation of {@link Response} that wraps around an underlying {@link HttpServletResponse}.
@@ -54,6 +64,13 @@ public class ResponseImpl implements Response
 
         Writer w = new OutputStreamWriter(os, response.getCharacterEncoding());
 
+<<<<<<< HEAD
+=======
+        OutputStream os = response.getOutputStream();
+
+        Writer w = new OutputStreamWriter(os, response.getCharacterEncoding());
+
+>>>>>>> refs/remotes/apache/5.0
         return new PrintWriter(new BufferedWriter(w));
     }
 

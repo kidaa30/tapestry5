@@ -108,6 +108,7 @@ public class DocumentLinkerImpl implements DocumentLinker
         Element root = document.getRootElement();
 
         // If the document failed to render at all, that's a different problem and is reported elsewhere.
+<<<<<<< HEAD
 
         if (root == null)
         {
@@ -125,9 +126,14 @@ public class DocumentLinkerImpl implements DocumentLinker
         addStylesheetsToHead(root, includedStylesheets);
 
         // only add the generator meta only to html documents
+=======
+
+        if (root == null) return;
+>>>>>>> refs/remotes/apache/5.0
 
         boolean isHtmlRoot = root.getName().equals("html");
 
+<<<<<<< HEAD
         if (!omitGeneratorMetaTag && isHtmlRoot)
         {
             Element head = findOrCreateElement(root, "head", true);
@@ -182,6 +188,45 @@ public class DocumentLinkerImpl implements DocumentLinker
         // TAPESTRY-2364
 
         addContentToBody(body);
+=======
+        addScriptElements(root);
+    }
+
+    private void addScriptElements(Element root)
+    {
+        if (scripts.isEmpty() && scriptBlock.length() == 0) return;
+
+        // This only applies when the document is an HTML document. This may need to change in the
+        // future, perhaps configurable, to allow for html and xhtml and perhaps others. Does SVG
+        // use stylesheets?
+
+        String rootElementName = root.getName();
+
+        if (!rootElementName.equals("html"))
+            throw new RuntimeException(ServicesMessages.documentMissingHTMLRoot(rootElementName));
+
+        String childElement = scriptsAtTop ? "head" : "body";
+
+        Element container = findOrCreateElement(root, childElement, scriptsAtTop);
+
+        // TAPESTRY-2364
+
+        addScriptLinksForIncludedScripts(container, scripts);
+
+        addDynamicScriptBlock(findOrCreateElement(root, "body", false));
+    }
+
+    private Element findOrCreateElement(Element root, String childElement, boolean atTop)
+    {
+        Element container = root.find(childElement);
+
+        // Create the element is it is missing.
+
+        if (container == null)
+            container = atTop ? root.elementAt(0, childElement) : root.element(childElement);
+
+        return container;
+>>>>>>> refs/remotes/apache/5.0
     }
 
     /**
@@ -212,6 +257,7 @@ public class DocumentLinkerImpl implements DocumentLinker
 
 
     /**
+<<<<<<< HEAD
      * Adds {@code <script>} elements for the RequireJS library, then any statically includes JavaScript libraries
      * (including JavaScript stack virtual assets), then the initialization script block.
      *
@@ -255,6 +301,20 @@ public class DocumentLinkerImpl implements DocumentLinker
         // Create temporary container for the new <script> elements
 
         return addElementBefore(headElement, existingScript, newElementName);
+=======
+     * Adds a script link for each included script to the bottom of the container (the &lt;head&gt; or &lt;body&gt; of
+     * the document, based on the scriptsAtTop configuration).
+     *
+     * @param container element to add the script links to
+     * @param scripts   scripts to add
+     */
+    protected void addScriptLinksForIncludedScripts(Element container, List<String> scripts)
+    {
+        for (String scriptURL : scripts)
+            container.element("script",
+                              "src", scriptURL,
+                              "type", "text/javascript");
+>>>>>>> refs/remotes/apache/5.0
     }
 
     /**
@@ -278,6 +338,7 @@ public class DocumentLinkerImpl implements DocumentLinker
         // This only applies when the document is an HTML document. This may need to change in the
         // future, perhaps configurable, to allow for html and xhtml and perhaps others. Does SVG
         // use stylesheets?
+<<<<<<< HEAD
 
         String rootElementName = root.getName();
 
@@ -291,6 +352,15 @@ public class DocumentLinkerImpl implements DocumentLinker
 
         // Create a temporary container element.
         Element container = createTemporaryContainer(head, "style", "stylesheet-container");
+=======
+
+        String rootElementName = root.getName();
+
+        // Not an html document, don't add anything. 
+        if (!rootElementName.equals("html")) return;
+
+        Element head = findOrCreateElement(root, "head", true);
+>>>>>>> refs/remotes/apache/5.0
 
         for (int i = 0; i < count; i++)
         {

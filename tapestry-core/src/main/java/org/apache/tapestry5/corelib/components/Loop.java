@@ -408,10 +408,16 @@ public class Loop<T>
      * Ends the current heartbeat.
      */
     @AfterRender
+<<<<<<< HEAD
     Boolean after(MarkupWriter writer)
     {
         if (element != null)
             writer.end();
+=======
+    boolean after(MarkupWriter writer)
+    {
+        if (element != null) writer.end();
+>>>>>>> refs/remotes/apache/5.0
 
         endHeartbeat();
 

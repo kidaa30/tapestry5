@@ -16,6 +16,7 @@ package org.apache.tapestry5.dom;
 
 public abstract class AbstractMarkupModel implements MarkupModel
 {
+<<<<<<< HEAD
     private final boolean useApostropheForAttributes;
     private final char attributeQuoteChar;
 
@@ -30,6 +31,16 @@ public abstract class AbstractMarkupModel implements MarkupModel
         return attributeQuoteChar;
     }
 
+    /**
+     * Passes all characters but '&lt;', '&gt;' and '&amp;' through unchanged.
+     */
+    public String encode(String content)
+    {
+        int length = content.length();
+
+        StringBuilder builder = null;
+
+=======
     /**
      * Passes all characters but '&lt;', '&gt;' and '&amp;' through unchanged.
      */
@@ -93,6 +104,72 @@ public abstract class AbstractMarkupModel implements MarkupModel
 
     public void encodeQuoted(String content, StringBuilder builder)
     {
+        int length = content.length();
+
+>>>>>>> refs/remotes/apache/5.0
+        for (int i = 0; i < length; i++)
+        {
+            char ch = content.charAt(i);
+
+            switch (ch)
+            {
+                case '<':
+
+<<<<<<< HEAD
+                    if (builder == null)
+                    {
+                        builder = new StringBuilder(2 * length);
+
+                        builder.append(content.substring(0, i));
+                    }
+
+=======
+>>>>>>> refs/remotes/apache/5.0
+                    builder.append("&lt;");
+                    continue;
+
+                case '>':
+
+<<<<<<< HEAD
+                    if (builder == null)
+                    {
+                        builder = new StringBuilder(2 * length);
+
+                        builder.append(content.substring(0, i));
+                    }
+
+=======
+>>>>>>> refs/remotes/apache/5.0
+                    builder.append("&gt;");
+                    continue;
+
+                case '&':
+
+<<<<<<< HEAD
+                    if (builder == null)
+                    {
+                        builder = new StringBuilder(2 * length);
+
+                        builder.append(content.substring(0, i));
+                    }
+
+=======
+>>>>>>> refs/remotes/apache/5.0
+                    builder.append("&amp;");
+                    continue;
+
+                default:
+
+                    if (builder != null)
+                        builder.append(ch);
+            }
+        }
+
+        return builder == null ? content : builder.toString();
+    }
+
+    public void encodeQuoted(String content, StringBuilder builder)
+    {
         assert content != null;
         int length = content.length(), tokenStart = 0, i = 0;
         builder.ensureCapacity(builder.length() + length);
@@ -120,11 +197,16 @@ public abstract class AbstractMarkupModel implements MarkupModel
 
                 case '"':
 
+<<<<<<< HEAD
                     if (!useApostropheForAttributes)
                     {
                         delimiter = "&quot;";
                         break;
                     }
+=======
+                    builder.append("&quot;");
+                    continue;
+>>>>>>> refs/remotes/apache/5.0
 
                     continue;
 
@@ -143,7 +225,11 @@ public abstract class AbstractMarkupModel implements MarkupModel
 
                 default:
 
+<<<<<<< HEAD
                     continue;
+=======
+                    builder.append(ch);
+>>>>>>> refs/remotes/apache/5.0
             }
 
             if (tokenStart != i)

@@ -311,6 +311,7 @@ public class AppModule
         configuration.add("ReverseStringsWorker", new ReverseStringsWorker());
     }
 
+<<<<<<< HEAD
     public static void contributeComponentMessagesSource(@Value("context:WEB-INF/pre-app.properties")
                                                          Resource preappResource, OrderedConfiguration<Resource> configuration)
     {
@@ -363,4 +364,10 @@ public class AppModule
         configuration.add("core/t5dashboard");
     }
 
+=======
+    public static void contributeWhitelistAuthorizer(Configuration<String> configuration) 
+    {
+        configuration.add("org/apache/tapestry5/integration/app1/pages/availablefile.txt");
+    }
+>>>>>>> refs/remotes/apache/5.0
 }

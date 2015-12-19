@@ -129,4 +129,127 @@ public class SessionApplicationStatePersistenceStrategyTest extends InternalBase
 
         verify();
     }
+<<<<<<< HEAD
+=======
+
+    @Test
+    public void restore_map_is_empty()
+    {
+        Request request = mockRequest();
+        Map<String, Object> asoMap = Collections.emptyMap();
+
+        train_getAttribute(request, ASO_MAP_ATTRIBUTE, asoMap);
+
+        replay();
+
+        EndOfRequestListener strategy = new SessionApplicationStatePersistenceStrategy(request);
+
+        strategy.requestDidComplete();
+
+        verify();
+    }
+
+    @Test
+    public void restore_aso_is_null()
+    {
+        Request request = mockRequest();
+        Map<String, Object> asoMap = CollectionFactory.newMap();
+
+        asoMap.put("some.key", null);
+
+        train_getAttribute(request, ASO_MAP_ATTRIBUTE, asoMap);
+
+        replay();
+
+        EndOfRequestListener strategy = new SessionApplicationStatePersistenceStrategy(request);
+
+        strategy.requestDidComplete();
+
+        verify();
+    }
+
+
+    @Test
+    public void restore_non_optimized_object()
+    {
+        Request request = mockRequest();
+        Session session = mockSession();
+        Map<String, Object> asoMap = CollectionFactory.newMap();
+
+        String key = "foo:bar";
+        Object aso = new Object();
+
+        asoMap.put(key, aso);
+
+        train_getAttribute(request, ASO_MAP_ATTRIBUTE, asoMap);
+        train_getSession(request, true, session);
+        session.setAttribute(key, aso);
+
+        replay();
+
+        EndOfRequestListener strategy = new SessionApplicationStatePersistenceStrategy(request);
+
+        strategy.requestDidComplete();
+
+        verify();
+    }
+
+    @Test
+    public void restore_optimized_object_is_dirty()
+    {
+        Request request = mockRequest();
+        Session session = mockSession();
+        Map<String, Object> asoMap = CollectionFactory.newMap();
+
+        String key = "foo:bar";
+        OptimizedApplicationStateObject aso = mockOptimizedApplicationStateObject(true);
+
+        asoMap.put(key, aso);
+
+        train_getAttribute(request, ASO_MAP_ATTRIBUTE, asoMap);
+        train_getSession(request, true, session);
+        session.setAttribute(key, aso);
+
+        replay();
+
+        EndOfRequestListener strategy = new SessionApplicationStatePersistenceStrategy(request);
+
+        strategy.requestDidComplete();
+
+        verify();
+    }
+
+    @Test
+    public void restore_optimized_object_is_clean()
+    {
+        Request request = mockRequest();
+        Session session = mockSession();
+        Map<String, Object> asoMap = CollectionFactory.newMap();
+
+        String key = "foo:bar";
+        OptimizedApplicationStateObject aso = mockOptimizedApplicationStateObject(false);
+
+        asoMap.put(key, aso);
+
+        train_getAttribute(request, ASO_MAP_ATTRIBUTE, asoMap);
+
+        replay();
+
+        EndOfRequestListener strategy = new SessionApplicationStatePersistenceStrategy(request);
+
+        strategy.requestDidComplete();
+
+        verify();
+    }
+
+    private OptimizedApplicationStateObject mockOptimizedApplicationStateObject(boolean dirty)
+    {
+
+        OptimizedApplicationStateObject object = newMock(OptimizedApplicationStateObject.class);
+
+        expect(object.isApplicationStateObjectDirty()).andReturn(dirty);
+
+        return object;
+    }
+>>>>>>> refs/remotes/apache/5.0
 }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright 2008, 2009 The Apache Software Foundation
+=======
+// Copyright 2008 The Apache Software Foundation
+>>>>>>> refs/remotes/apache/5.0
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,20 +30,31 @@ import java.util.Map;
  */
 class MapHolder
 {
+<<<<<<< HEAD
     private static final Map<String, String> EMPTY_MAP = Collections.emptyMap();
 
+=======
+>>>>>>> refs/remotes/apache/5.0
     private final Map<String, String> startingMap;
 
     private Map<String, String> localMap;
 
     MapHolder()
     {
+<<<<<<< HEAD
         this(null);
+=======
+        this(Collections.<String, String>emptyMap());
+>>>>>>> refs/remotes/apache/5.0
     }
 
     MapHolder(Map<String, String> startingMap)
     {
+<<<<<<< HEAD
         this.startingMap = startingMap == null ? EMPTY_MAP : startingMap;
+=======
+        this.startingMap = startingMap;
+>>>>>>> refs/remotes/apache/5.0
     }
 
     void put(String key, String value)

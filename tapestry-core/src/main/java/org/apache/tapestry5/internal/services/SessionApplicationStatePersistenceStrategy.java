@@ -14,6 +14,12 @@
 
 package org.apache.tapestry5.internal.services;
 
+<<<<<<< HEAD
+=======
+import org.apache.tapestry5.OptimizedApplicationStateObject;
+import org.apache.tapestry5.internal.events.EndOfRequestListener;
+import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
+>>>>>>> refs/remotes/apache/5.0
 import org.apache.tapestry5.services.ApplicationStateCreator;
 import org.apache.tapestry5.services.ApplicationStatePersistenceStrategy;
 import org.apache.tapestry5.services.Request;
@@ -77,6 +83,62 @@ public class SessionApplicationStatePersistenceStrategy implements ApplicationSt
     {
         Session session = request.getSession(false);
 
+<<<<<<< HEAD
         return session != null && session.getAttribute(buildKey(ssoClass)) != null;
+=======
+        return session != null && session.getAttribute(key) != null;
+    }
+
+    private Map<String, Object> getASOMap()
+    {
+        Map<String, Object> result = (Map<String, Object>) request.getAttribute(ASO_MAP_ATTRIBUTE);
+
+        if (result == null)
+        {
+            result = CollectionFactory.newMap();
+            request.setAttribute(ASO_MAP_ATTRIBUTE, result);
+        }
+
+        return result;
+    }
+
+    public void requestDidComplete()
+    {
+        Map<String, Object> map = getASOMap();
+
+        for (String key : map.keySet())
+        {
+            Object aso = map.get(key);
+
+            if (aso == null) continue;
+
+            if (needsRestore(aso))
+            {
+                Session session = request.getSession(true);
+
+                // It is expected that the ASO implements HttpSessionBindingListener and
+                // can clear its dirty flag as it is saved.
+
+                session.setAttribute(key, aso);
+            }
+        }
+    }
+
+    private boolean needsRestore(Object aso)
+    {
+        // We could check for basic immutable types here, but those are not typically ASOs.
+        // ASOs tend to be more complex, mutable objects.
+
+        if (aso instanceof OptimizedApplicationStateObject)
+        {
+            OptimizedApplicationStateObject optimized = (OptimizedApplicationStateObject) aso;
+
+            return optimized.isApplicationStateObjectDirty();
+        }
+
+        // If not optimized, assume that it is (in fact) dirty.
+
+        return true;
+>>>>>>> refs/remotes/apache/5.0
     }
 }

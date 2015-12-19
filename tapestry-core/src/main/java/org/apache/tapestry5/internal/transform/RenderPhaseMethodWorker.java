@@ -129,10 +129,17 @@ public class RenderPhaseMethodWorker implements ComponentClassTransformWorker2
 
                 // Methods either take no parameters, or take a MarkupWriter parameter.
 
+<<<<<<< HEAD
                 if (method.getParameters().size() > 0)
                 {
                     builder.loadArgument(0);
                 }
+=======
+        model.addRenderPhase(methodAnnotation);
+
+        BodyBuilder builder = new BodyBuilder();
+        builder.begin();
+>>>>>>> refs/remotes/apache/5.0
 
                 builder.invokeVirtual(method);
 
@@ -234,6 +241,7 @@ public class RenderPhaseMethodWorker implements ComponentClassTransformWorker2
                                 method.toString()));
         }
     }
+<<<<<<< HEAD
 
 
     private Flow<PlasticMethod> matchAllMethodsNotOverriddenFromBaseClass(final PlasticClass plasticClass)
@@ -246,4 +254,6 @@ public class RenderPhaseMethodWorker implements ComponentClassTransformWorker2
             }
         });
     }
+=======
+>>>>>>> refs/remotes/apache/5.0
 }

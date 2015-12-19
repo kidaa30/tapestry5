@@ -107,6 +107,7 @@ public interface MutableComponentModel extends ComponentModel
      *
      * @param renderPhase annotation class corresponding to the render phase
      * @see ComponentModel#getHandledRenderPhases()
+<<<<<<< HEAD
      * @since 5.0.19, 5.1.0.0
      */
     void addRenderPhase(Class renderPhase);
@@ -131,4 +132,9 @@ public interface MutableComponentModel extends ComponentModel
      * @since 5.4
      */
     void doHandleActivationEventContext();
+=======
+     * @since 5.0.19
+     */
+    void addRenderPhase(Class renderPhase);
+>>>>>>> refs/remotes/apache/5.0
 }
